@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import { Link, NavLink } from "react-router";
+import { Link, NavLink } from "react-router"; // Ensure this matches your package (react-router or react-router-dom)
 import { AuthContext } from "../provider/AuthProvider";
 
 
@@ -8,26 +8,43 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logOut()
-      .then(() => {})
+      .then(() => {
+        // Optional: Add a success toast here
+      })
       .catch((err) => console.log(err));
   };
 
   const navLinks = (
     <>
       <li>
-        <NavLink to="/" className={({ isActive }) => 
-          `px-4 py-2 rounded-lg transition-all ${isActive ? "bg-primary/10 text-primary font-bold" : "hover:bg-base-200"}`
-        }>Home</NavLink>
+        <NavLink 
+          to="/" 
+          className={({ isActive }) => 
+            `px-4 py-2 rounded-lg transition-all ${isActive ? "bg-primary/10 text-primary font-bold" : "hover:bg-base-200 text-slate-600"}`
+          }
+        >
+          Home
+        </NavLink>
       </li>
       <li>
-        <NavLink to="/all-contests" className={({ isActive }) => 
-          `px-4 py-2 rounded-lg transition-all ${isActive ? "bg-primary/10 text-primary font-bold" : "hover:bg-base-200"}`
-        }>Explore Contests</NavLink>
+        <NavLink 
+          to="/all-contests" 
+          className={({ isActive }) => 
+            `px-4 py-2 rounded-lg transition-all ${isActive ? "bg-primary/10 text-primary font-bold" : "hover:bg-base-200 text-slate-600"}`
+          }
+        >
+          Explore Contests
+        </NavLink>
       </li>
       <li>
-        <NavLink to="/leaderboard" className={({ isActive }) => 
-          `px-4 py-2 rounded-lg transition-all ${isActive ? "bg-primary/10 text-primary font-bold" : "hover:bg-base-200"}`
-        }>Leaderboard</NavLink>
+        <NavLink 
+          to="/leaderboard" 
+          className={({ isActive }) => 
+            `px-4 py-2 rounded-lg transition-all ${isActive ? "bg-primary/10 text-primary font-bold" : "hover:bg-base-200 text-slate-600"}`
+          }
+        >
+          Leaderboard
+        </NavLink>
       </li>
     </>
   );
@@ -39,8 +56,8 @@ const Navbar = () => {
           
           {/* Logo */}
           <div className="shrink-0 flex items-center">
-            <Link to="/" className="flex items-center gap-2">
-              <div className="bg-gradient-to-tr from-primary to-accent p-2 rounded-xl shadow-lg shadow-primary/20">
+            <Link to="/" className="flex items-center gap-2 group">
+              <div className="bg-gradient-to-tr from-primary to-accent p-2 rounded-xl shadow-lg shadow-primary/20 group-hover:scale-110 transition-transform">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
@@ -53,7 +70,7 @@ const Navbar = () => {
 
           {/* Desktop Menu */}
           <div className="hidden lg:flex items-center gap-2">
-            <ul className="flex items-center gap-1 text-sm font-semibold text-slate-600">
+            <ul className="flex items-center gap-1 text-sm font-semibold">
               {navLinks}
             </ul>
           </div>
@@ -69,12 +86,12 @@ const Navbar = () => {
                 </label>
                 <ul tabIndex={0} className="mt-4 z-[1] p-3 shadow-2xl menu menu-sm dropdown-content bg-white rounded-2xl w-60 border border-slate-100">
                   <div className="px-4 py-3 border-b border-slate-50 mb-2">
-                    <p className="font-bold text-slate-900 truncate">{user?.displayName || "User"}</p>
+                    <p className="font-bold text-slate-900 truncate">{user?.displayName || "Anonymous User"}</p>
                     <p className="text-xs text-slate-500 truncate">{user?.email}</p>
                   </div>
-                  <li><Link to="/dashboard" className="py-2.5 rounded-lg">My Dashboard</Link></li>
+                  <li><Link to="/dashboard" className="py-2.5 rounded-lg font-medium hover:bg-primary/5">My Dashboard</Link></li>
                   <li className="mt-2 pt-2 border-t border-slate-50">
-                    <button onClick={handleLogout} className="text-error font-bold">Logout</button>
+                    <button onClick={handleLogout} className="text-error font-bold hover:bg-error/10 rounded-lg">Logout</button>
                   </li>
                 </ul>
               </div>
@@ -89,20 +106,20 @@ const Navbar = () => {
               </div>
             )}
 
-            {/* Mobile Menu */}
+            {/* Mobile Menu Toggle */}
             <div className="lg:hidden dropdown dropdown-end">
               <label tabIndex={0} className="btn btn-ghost btn-circle">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" />
                 </svg>
               </label>
-              <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-4 shadow-xl bg-white rounded-xl w-64 border border-slate-100 gap-2">
+              <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-4 shadow-xl bg-white rounded-xl w-64 border border-slate-100 gap-2 font-outfit">
                 {navLinks}
-                <hr className="my-2 border-slate-100"/>
                 {!user && (
                   <>
-                    <li><Link to="/auth/login" className="py-2">Login</Link></li>
-                    <li><Link to="/auth/register" className="bg-primary text-white py-2 rounded-lg text-center font-bold">Register</Link></li>
+                    <hr className="my-2 border-slate-100"/>
+                    <li><Link to="/auth/login" className="py-2 font-semibold">Login</Link></li>
+                    <li><Link to="/auth/register" className="bg-primary text-white py-2 rounded-lg text-center font-bold shadow-md">Register</Link></li>
                   </>
                 )}
               </ul>

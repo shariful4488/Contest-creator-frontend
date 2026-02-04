@@ -19,22 +19,22 @@ const Router = createBrowserRouter([
                 element: <Home />
             },
             {
-                path: "all-contests",
-                element: <AllContests />
+                // path: "all-contests",
+                // element: <AllContests />
             },
             {
-                path: "contest/:id",
-                element: (
-                    <PrivateRoute>
-                        <ContestDetails />
-                    </PrivateRoute>
-                ),
+                // path: "contest/:id",
+                // element: (
+                //     <PrivateRoute>
+                //         <ContestDetails />
+                //     </PrivateRoute>
+                // ),
                 // TanStack Query ব্যবহার করলে লোডার না দিলেও চলে, 
                 // তবে রিকোয়ারমেন্ট অনুযায়ী ডাটা ফেচিং পরে সেট করা যাবে।
             },
             {
-                path: "leaderboard",
-                element: <div className="py-20 text-center text-3xl">Leaderboard Coming Soon...</div>
+                // path: "leaderboard",
+                // element: <div className="py-20 text-center text-3xl">Leaderboard Coming Soon...</div>
             }
         ]
     },
@@ -54,11 +54,11 @@ const Router = createBrowserRouter([
     },
     {
         path: "dashboard",
-        element: (
-            <PrivateRoute>
-                <div className="py-20 text-center text-3xl font-black">Dashboard Layout (Step 4 এ করব)</div>
-            </PrivateRoute>
-        ),
+        // element: (
+            // <PrivateRoute>
+            //     <div className="py-20 text-center text-3xl font-black">Dashboard Layout (Step 4 এ করব)</div>
+            // </PrivateRoute>
+        // ),
         children: [
             // এখানে অ্যাডমিন, ক্রিয়েটর এবং ইউজার রুটগুলো আসবে
         ]
