@@ -1,0 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap');
+@import "tailwindcss";
+
+@plugin "daisyui" {
+   themes: light --default;
+};
+
+@plugin "daisyui/theme" {
+  name: "light";
+  default: true;
+  --color-primary: #0061FF;     
+  --color-secondary: #1E293B;    
+  --color-accent: #00D1FF;      
+  --color-base-100: #FFFFFF;
+  --color-base-200: #F8FAFC;   
+}
+
+body {
+  font-family: "Outfit", sans-serif;
+  background-color: #F8FAFC;
+}
