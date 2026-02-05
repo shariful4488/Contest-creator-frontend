@@ -1,13 +1,11 @@
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router";
+import { Link, useNavigate } from "react-router"; // Fixed import
 import { useContext } from "react";
 import Swal from "sweetalert2";
 import { FcGoogle } from "react-icons/fc";
 import { AuthContext } from "../provider/AuthProvider";
 import useAxiosPublic from "../hooks/useAxios";
 
-
-// ImgBB API
 const image_hosting_key = import.meta.env.VITE_IMGBB_API_KEY;
 const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
 
@@ -19,11 +17,11 @@ const Register = () => {
     const { register, handleSubmit, reset, formState: { errors } } = useForm();
 
     const onSubmit = async (data) => {
-       
         const imageFile = new FormData();
         imageFile.append('image', data.photo[0]);
 
         try {
+            // ১. ইমেজ আপলোড
             const res = await axiosPublic.post(image_hosting_api, imageFile, {
                 headers: { 'content-type': 'multipart/form-data' }
             });
@@ -31,18 +29,16 @@ const Register = () => {
             if (res.data.success) {
                 const imageUrl = res.data.data.display_url;
 
-                
-                const result = await createUser(data.email, data.password);
-                
-               
+                // ২. ফায়ারবেস ইউজার তৈরি
+                await createUser(data.email, data.password);      
                 await updateUserProfile(data.name, imageUrl);
 
-               
+                // ৩. ডাটাবেসে ইউজার ইনফো সেভ (সিলেক্ট করা রোল সহ)
                 const userInfo = {
                     name: data.name,
                     email: data.email,
                     image: imageUrl,
-                    role: 'user', 
+                    role: data.role, // ড্রপডাউন থেকে আসা রোল (admin/creator/user)
                     timestamp: new Date()
                 };
 
@@ -52,7 +48,7 @@ const Register = () => {
                     Swal.fire({
                         icon: "success",
                         title: "Registration Successful!",
-                        text: "User data saved to database",
+                        text: `Welcome! You are registered as ${data.role}`,
                         showConfirmButton: false,
                         timer: 1500,
                     });
@@ -69,7 +65,6 @@ const Register = () => {
         }
     };
 
-    
     const handleGoogleSignIn = () => {
         googleSignIn()
             .then(async (result) => {
@@ -77,7 +72,7 @@ const Register = () => {
                     email: result.user?.email,
                     name: result.user?.displayName,
                     image: result.user?.photoURL,
-                    role: 'user',
+                    role: 'user', // গুগল সাইন-ইন করলে ডিফল্ট 'user' হবে
                     timestamp: new Date()
                 };
                 
@@ -95,14 +90,29 @@ const Register = () => {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-base-200 py-10 px-4">
+        <div className="min-h-screen flex items-center justify-center bg-base-200 py-10 px-4 font-outfit">
             <div className="max-w-md w-full bg-white rounded-3xl shadow-2xl p-8 border border-slate-100">
                 <div className="text-center mb-8">
-                    <h2 className="text-3xl font-black text-secondary">Create Account</h2>
-                    <p className="text-slate-400 text-sm font-medium">Join ContestHub today</p>
+                    <h2 className="text-3xl font-black text-secondary uppercase italic">Join <span className="text-primary">Hub</span></h2>
+                    <p className="text-slate-400 text-sm font-medium">Create your account and start competing</p>
                 </div>
 
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+                    
+                    {/* Role Selection Dropdown */}
+                    <div className="form-control">
+                        <label className="label-text font-bold mb-1 ml-1">Register As</label>
+                        <select 
+                            {...register("role", { required: "Role is required" })}
+                            className="select select-bordered rounded-xl focus:ring-2 ring-primary/20 w-full font-semibold text-secondary"
+                        >
+                            <option value="user">User (Contestant)</option>
+                            <option value="creator">Manager (Contest Creator)</option>
+                            <option value="admin">Admin</option>
+                        </select>
+                        {errors.role && <span className="text-error text-xs mt-1">{errors.role.message}</span>}
+                    </div>
+
                     {/* Name */}
                     <div className="form-control">
                         <label className="label-text font-bold mb-1 ml-1">Full Name</label>
@@ -154,7 +164,7 @@ const Register = () => {
                     </div>
 
                     <button className="btn btn-primary w-full rounded-xl text-white font-bold text-lg mt-4 shadow-lg shadow-primary/30 transition-all active:scale-95">
-                        Register
+                        Register Now
                     </button>
                 </form>
 
