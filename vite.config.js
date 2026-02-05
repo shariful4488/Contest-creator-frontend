@@ -1,14 +1,10 @@
-@import "tailwindcss";
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite'
 
-@theme {
-  --animate-pulse-slow: pulse 6s cubic-bezier(0.4, 0, 0.6, 1) infinite;
-  --animate-bounce-slow: bounce 3s infinite;
-}
 
-@utility animate-pulse-slow {
-  animation: var(--animate-pulse-slow);
-}
 
-@utility animate-bounce-slow {
-  animation: var(--animate-bounce-slow);
-}
+// https://vitejs.dev/config/
+export default defineConfig({
+  plugins: [react(),tailwindcss()],
+})
