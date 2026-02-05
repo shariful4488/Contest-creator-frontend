@@ -17,6 +17,8 @@ import Dashboard from "../layouts/Dashboardlayout/Dashboardlayout";
 import AdminRoute from "./AdminRoute";
 import PrivateRoute from "../provider/PrivateRoute";
 import ManageContests from "../pages/AdminDashboard/ManageContests";
+import AddContest from "../pages/ManagerDashboard/AddContest";
+import MyCreatedContests from "../pages/ManagerDashboard/MyCreatedContests";
 
 
 
@@ -49,9 +51,18 @@ const Router = createBrowserRouter([
             { 
                 path: "manage-contests", 
                 element: <AdminRoute><ManageContests /></AdminRoute> 
-            }
+            },
+            {
+                path:"myCreated-contests",
+                element:<MyCreatedContests/>
+            },
             
             // Creator Routes
+            {
+                path: "add-contest",
+                element:<AddContest/>
+
+            }
            
             // User Routes
             

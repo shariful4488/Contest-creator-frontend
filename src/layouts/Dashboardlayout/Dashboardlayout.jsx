@@ -45,7 +45,7 @@ const Dashboard = () => {
                                 <DashboardLink to="/dashboard/add-contest" icon={<FaFolderPlus />} label="Add Contest" />
                             </li>
                             <li>
-                                <DashboardLink to="/dashboard/my-created-contests" icon={<FaAddressCard />} label="My Contests" />
+                                <DashboardLink to="/dashboard/myCreated-contests" icon={<FaAddressCard />} label="My Contests" />
                             </li>
                         </>
                     )}
