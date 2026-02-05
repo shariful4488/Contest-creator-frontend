@@ -23,6 +23,7 @@ import MyParticipated from "../pages/UserDashboard/MyParticipated";
 import MyWinnings from "../pages/UserDashboard/MyWinnings";
 import MyProfile from "../pages/UserDashboard/MyProfile";
 import UpdateContest from "../pages/ManagerDashboard/UpdateContest";
+import ContestDetails from "../pages/ContestDetails";
 
 
 
@@ -32,7 +33,13 @@ const Router = createBrowserRouter([
         element: <RootLayout />,
         children: [
             { path: "/", element: <Home /> },
-            { path: "all-contests", element: <div className="py-20 text-center">All Contests Coming Soon...</div> }
+            { path: "all-contests", element: <div className="py-20 text-center">All Contests Coming Soon...</div> },
+
+            {
+                path: "contest-details/:id", 
+                element: <PrivateRoute><ContestDetails /></PrivateRoute>, 
+                loader: ({params}) => fetch(`/contests/${params.id}`)
+            }
         ]
     },
     {
