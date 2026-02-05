@@ -22,6 +22,7 @@ import MyCreatedContests from "../pages/ManagerDashboard/MyCreatedContests";
 import MyParticipated from "../pages/UserDashboard/MyParticipated";
 import MyWinnings from "../pages/UserDashboard/MyWinnings";
 import MyProfile from "../pages/UserDashboard/MyProfile";
+import UpdateContest from "../pages/ManagerDashboard/UpdateContest";
 
 
 
@@ -65,6 +66,11 @@ const Router = createBrowserRouter([
                 path: "add-contest",
                 element:<AddContest/>
 
+            },
+            {
+                path: "update-contest/:id",
+                element: <UpdateContest />,
+                loader: ({params}) => fetch(`/contests/${params.id}`) 
             },
            
             // User Routes
