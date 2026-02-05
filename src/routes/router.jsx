@@ -19,6 +19,7 @@ import PrivateRoute from "../provider/PrivateRoute";
 import ManageContests from "../pages/AdminDashboard/ManageContests";
 import AddContest from "../pages/ManagerDashboard/AddContest";
 import MyCreatedContests from "../pages/ManagerDashboard/MyCreatedContests";
+import MyParticipated from "../pages/UserDashboard/MyParticipated";
 
 
 
@@ -62,9 +63,14 @@ const Router = createBrowserRouter([
                 path: "add-contest",
                 element:<AddContest/>
 
-            }
+            },
            
             // User Routes
+            {
+                path: "my-participated",
+                role:"user",
+                element:<MyParticipated/>
+            }
             
         ]
     },
