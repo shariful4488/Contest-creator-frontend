@@ -20,6 +20,8 @@ import ManageContests from "../pages/AdminDashboard/ManageContests";
 import AddContest from "../pages/ManagerDashboard/AddContest";
 import MyCreatedContests from "../pages/ManagerDashboard/MyCreatedContests";
 import MyParticipated from "../pages/UserDashboard/MyParticipated";
+import MyWinnings from "../pages/UserDashboard/MyWinnings";
+import MyProfile from "../pages/UserDashboard/MyProfile";
 
 
 
@@ -70,6 +72,14 @@ const Router = createBrowserRouter([
                 path: "my-participated",
                 role:"user",
                 element:<MyParticipated/>
+            },
+            {
+                path: "my-winnings",
+                element:<MyWinnings/>
+            },
+            {
+                path: "profile",
+                element:<MyProfile/>
             }
             
         ]
