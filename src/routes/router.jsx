@@ -26,6 +26,8 @@ import UpdateContest from "../pages/ManagerDashboard/UpdateContest";
 import ContestDetails from "../pages/ContestDetails";
 import Payment from "../pages/Payment";
 import SubmissionReview from "../pages/ManagerDashboard/SubmissionReview";
+import ExploreContests from "../pages/ExploreContests";
+import Leaderboard from "../pages/Leaderboard";
 
 
 
@@ -35,7 +37,14 @@ const Router = createBrowserRouter([
         element: <RootLayout />,
         children: [
             { path: "/", element: <Home /> },
-            { path: "all-contests", element: <div className="py-20 text-center">All Contests Coming Soon...</div> },
+            { path: "all-contests",
+             element:<ExploreContests/> 
+            },
+            {
+                path:"leaderboard",
+                element:<Leaderboard/>
+
+            },
 
             {
                 path: "contest-details/:id", 
