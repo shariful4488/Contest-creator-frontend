@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import useAxiosPublic from "../hooks/useAxios";
+import { FaTrophy } from "react-icons/fa";
 
 
 const Leaderboard = () => {
@@ -69,11 +70,11 @@ const Leaderboard = () => {
                                 </td>
                                 <td>
                                     {index === 0 ? (
-                                        <span className="badge badge-warning p-3 font-bold">🏆 Ultimate Champion</span>
+                                        <span className="badge badge-warning p-3 font-bold"><FaTrophy className="mr-2" /> Ultimate Champion</span>
                                     ) : index === 1 ? (
-                                        <span className="badge badge-ghost p-3 font-bold">🥈 Silver Medalist</span>
+                                        <span className="badge badge-ghost p-3 font-bold"><FaTrophy className="mr-2" /> Silver Medalist</span>
                                     ) : index === 2 ? (
-                                        <span className="badge badge-ghost p-3 font-bold">🥉 Bronze Winner</span>
+                                        <span className="badge badge-ghost p-3 font-bold"><FaTrophy className="mr-2" /> Bronze Winner</span>
                                     ) : (
                                         <span className="badge badge-outline p-3 font-medium">Contender</span>
                                     )}

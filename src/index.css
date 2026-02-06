@@ -17,7 +17,7 @@
 @plugin "daisyui/theme" {
   name: "dark";
   --color-primary: #3b82f6;
-  --color-base-100: #0f172a; /
+  --color-base-100: #0f172a; 
   --color-base-content: #f8fafc; 
 }
 
