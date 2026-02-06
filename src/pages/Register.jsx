@@ -1,17 +1,19 @@
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router"; // Fixed import
+import { Link, useNavigate } from "react-router"; 
 import { useContext } from "react";
 import Swal from "sweetalert2";
 import { FcGoogle } from "react-icons/fc";
-import { AuthContext } from "../provider/AuthProvider";
 import useAxiosPublic from "../hooks/useAxios";
+import { AuthContext } from "../provider/AuthProvider";
+
+
 
 const image_hosting_key = import.meta.env.VITE_IMGBB_API_KEY;
 const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
 
 const Register = () => {
     const { createUser, updateUserProfile, googleSignIn } = useContext(AuthContext);
-    const axiosPublic = useAxiosPublic();
+    const axiosPublic = useAxiosPublic(); 
     const navigate = useNavigate();
 
     const { register, handleSubmit, reset, formState: { errors } } = useForm();
@@ -33,22 +35,23 @@ const Register = () => {
                 await createUser(data.email, data.password);      
                 await updateUserProfile(data.name, imageUrl);
 
-                // ৩. ডাটাবেসে ইউজার ইনফো সেভ (সিলেক্ট করা রোল সহ)
+                // ৩. ডাটাবেসে ইউজার ইনফো সেভ (ডিফল্ট রোল 'user')
                 const userInfo = {
                     name: data.name,
                     email: data.email,
                     image: imageUrl,
-                    role: data.role, // ড্রপডাউন থেকে আসা রোল (admin/creator/user)
+                    role: 'user', // এখানে আর data.role দরকার নেই, সরাসরি 'user'
+                    winCount: 0,
                     timestamp: new Date()
                 };
 
                 const dbResponse = await axiosPublic.post('/users', userInfo);
                 
-                if (dbResponse.data.insertedId) {
+                if (dbResponse.data.insertedId || dbResponse.data.message === "User already exists") {
                     Swal.fire({
                         icon: "success",
                         title: "Registration Successful!",
-                        text: `Welcome! You are registered as ${data.role}`,
+                        text: "Welcome to ContestHub!",
                         showConfirmButton: false,
                         timer: 1500,
                     });
@@ -59,7 +62,7 @@ const Register = () => {
         } catch (error) {
             Swal.fire({
                 icon: "error",
-                title: "Oops...",
+                title: "Registration Failed",
                 text: error.message || "Something went wrong!",
             });
         }
@@ -72,7 +75,8 @@ const Register = () => {
                     email: result.user?.email,
                     name: result.user?.displayName,
                     image: result.user?.photoURL,
-                    role: 'user', // গুগল সাইন-ইন করলে ডিফল্ট 'user' হবে
+                    role: 'user', 
+                    winCount: 0,
                     timestamp: new Date()
                 };
                 
@@ -99,20 +103,6 @@ const Register = () => {
 
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                     
-                    {/* Role Selection Dropdown */}
-                    <div className="form-control">
-                        <label className="label-text font-bold mb-1 ml-1">Register As</label>
-                        <select 
-                            {...register("role", { required: "Role is required" })}
-                            className="select select-bordered rounded-xl focus:ring-2 ring-primary/20 w-full font-semibold text-secondary"
-                        >
-                            <option value="user">User (Contestant)</option>
-                            <option value="creator">Manager (Contest Creator)</option>
-                            <option value="admin">Admin</option>
-                        </select>
-                        {errors.role && <span className="text-error text-xs mt-1">{errors.role.message}</span>}
-                    </div>
-
                     {/* Name */}
                     <div className="form-control">
                         <label className="label-text font-bold mb-1 ml-1">Full Name</label>

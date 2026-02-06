@@ -1,11 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import useAuth from "../../hooks/useAuth";
-import useAxiosPublic from "../../hooks/useAxios";
 import { FaTrophy, FaGamepad, FaEnvelope, FaUserTag, FaChartLine } from "react-icons/fa";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const MyProfile = () => {
     const { user } = useAuth();
-    const axiosPublic = useAxiosPublic();
+    const axiosPublic = useAxiosSecure();
 
     const { data: stats = {} } = useQuery({
         queryKey: ['user-stats', user?.email],

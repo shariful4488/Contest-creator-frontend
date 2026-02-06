@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import useAxiosPublic from "../../hooks/useAxios";
 import { FaTrashAlt, FaUserShield, FaUserEdit } from "react-icons/fa";
 import Swal from "sweetalert2";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const ManageUsers = () => {
-    const axiosPublic = useAxiosPublic();
+    const axiosPublic = useAxiosSecure();
 
     // সব ইউজারদের ডাটা নিয়ে আসা
     const { data: users = [], refetch } = useQuery({

@@ -1,4 +1,4 @@
-import { createContext , useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 import { 
     createUserWithEmailAndPassword, 
     signInWithEmailAndPassword, 
@@ -9,7 +9,7 @@ import {
     updateProfile 
 } from "firebase/auth";
 import { auth } from "../firebase/firebase.config";
-
+import axios from "axios"; 
 
 export const AuthContext = createContext(null);
 const googleProvider = new GoogleAuthProvider();
@@ -17,6 +17,11 @@ const googleProvider = new GoogleAuthProvider();
 const AuthProvider = ({ children }) => {
     const [user, setUser] = useState(null);
     const [loading, setLoading] = useState(true);
+
+  
+    const axiosPublic = axios.create({
+        baseURL: 'http://localhost:5000' 
+    });
 
     const createUser = (email, password) => {
         setLoading(true);
@@ -38,21 +43,36 @@ const AuthProvider = ({ children }) => {
         return signOut(auth);
     };
 
-    // প্রোফাইল আপডেট করার সময় স্টেট আপডেট করা
     const updateUserProfile = (name, photo) => {
         return updateProfile(auth.currentUser, {
             displayName: name,
             photoURL: photo,
-        }).then(() => {
-            // নাম/ছবি সেভ হওয়ার পর স্টেট ম্যানুয়ালি আপডেট করে দেওয়া
-            setUser({ ...auth.currentUser, displayName: name, photoURL: photo });
         });
     };
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
             setUser(currentUser);
-            setLoading(false);
+            
+            if (currentUser) {
+                const userInfo = { email: currentUser.email };
+                // JWT নেওয়ার জন্য axiosPublic ব্যবহার করুন
+                axiosPublic.post('/jwt', userInfo)
+                    .then(res => {
+                        if (res.data.token) {
+                            localStorage.setItem('access-token', res.data.token);
+                            setLoading(false);
+                        }
+                    })
+                    .catch(err => {
+                        console.error("JWT Error:", err);
+                        setLoading(false);
+                    });
+            } else {
+                localStorage.removeItem('access-token');
+                setLoading(false);
+            }
+
             console.log("Current User observed:", currentUser);
         });
         return () => unsubscribe();

@@ -24,6 +24,8 @@ import MyWinnings from "../pages/UserDashboard/MyWinnings";
 import MyProfile from "../pages/UserDashboard/MyProfile";
 import UpdateContest from "../pages/ManagerDashboard/UpdateContest";
 import ContestDetails from "../pages/ContestDetails";
+import Payment from "../pages/Payment";
+import SubmissionReview from "../pages/ManagerDashboard/SubmissionReview";
 
 
 
@@ -39,7 +41,13 @@ const Router = createBrowserRouter([
                 path: "contest-details/:id", 
                 element: <PrivateRoute><ContestDetails /></PrivateRoute>, 
                 loader: ({params}) => fetch(`/contests/${params.id}`)
-            }
+            },
+            {
+               path:"payment/:id",
+               element:<PrivateRoute><Payment/></PrivateRoute>,
+               loader: ({params}) => fetch(`/contests/${params.id}`)
+            },
+            
         ]
     },
     {
@@ -79,11 +87,14 @@ const Router = createBrowserRouter([
                 element: <UpdateContest />,
                 loader: ({params}) => fetch(`/contests/${params.id}`) 
             },
+            {
+               path:"submission-review/:id",
+               element:<SubmissionReview/>
+            },
            
             // User Routes
             {
                 path: "my-participated",
-                role:"user",
                 element:<MyParticipated/>
             },
             {

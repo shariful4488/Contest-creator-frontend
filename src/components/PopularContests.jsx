@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import useAxiosPublic from "../hooks/useAxios";
 import ContestCard from "./ContestCard";
 import { Link } from "react-router"; 
+import useAxiosSecure from "../hooks/useAxiosSecure";
 
 const PopularContests = () => {
-    const axiosPublic = useAxiosPublic();
+    const axiosPublic = useAxiosSecure();
 
     const { data: contests = [], isLoading } = useQuery({
         queryKey: ['popular-contests'],
@@ -14,7 +14,7 @@ const PopularContests = () => {
         }
     });
 
-    // লোডিং অবস্থায় সুন্দর একটি স্কেলিটন বা মেসেজ
+   
     if (isLoading) return (
         <div className="flex justify-center items-center py-40">
             <span className="loading loading-spinner loading-lg text-primary"></span>

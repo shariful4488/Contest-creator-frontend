@@ -1,16 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
-import useAxiosPublic from "../../hooks/useAxios";
 import { FaCrown, FaTrophy } from "react-icons/fa";
 import useAuth from "../../hooks/useAuth";
+import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const MyWinnings = () => {
-    const axiosPublic = useAxiosPublic();
+    const axiosPublic = useAxiosSecure();
     const { user } = useAuth();
 
     const { data: winnings = [], isLoading } = useQuery({
         queryKey: ['my-winnings', user?.email],
         queryFn: async () => {
-            // আপনার ব্যাকএন্ডে এই রুটটি থাকতে হবে যা উইনারদের ফিল্টার করে দেয়
             const res = await axiosPublic.get(`/my-winnings/${user?.email}`);
             return res.data;
         }
