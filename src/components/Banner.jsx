@@ -1,68 +1,87 @@
-import { useState } from "react";
+import React from 'react';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import { Navigation, Pagination, Autoplay, EffectFade } from 'swiper/modules';
 
-const Banner = () => {
-    const [search, setSearch] = useState("");
+// Swiper styles
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import 'swiper/css/effect-fade';
 
-    const handleSearch = () => {
-        // এই ফাংশনটি আমরা পরে ডাটাবেস থেকে সার্চ করার জন্য ব্যবহার করব
-        console.log("Searching for category:", search);
+const Banner = ({ onSearch }) => {
+    
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        const text = e.target.search.value;
+        onSearch(text); 
     };
 
+    const slides = [
+        {
+            title: "Empower Your Creative Vision",
+            desc: "Submit your best designs and get recognized by global industry leaders.",
+            img: "https://images.unsplash.com/photo-1515187029135-18ee286d815b?q=80&w=1920",
+            btnText: "Graphic Design"
+        },
+        {
+            title: "Code the Future of Tech",
+            desc: "Showcase your development skills in the ultimate coding challenge.",
+            img: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?q=80&w=1920",
+            btnText: "Coding Contest"
+        },
+        {
+            title: "Master Business Strategy",
+            desc: "Pitch your ideas and solve real-world problems for a chance to win.",
+            img: "https://images.unsplash.com/photo-1522071823991-b1ae5e6a3048?q=80&w=1920",
+            btnText: "Business Marketing"
+        }
+    ];
+
     return (
-        <div className="relative min-h-[550px] md:min-h-162.5 flex items-center justify-center bg-secondary overflow-hidden">
-            <div className="absolute inset-0 z-0">
-                <div className="absolute top-[-10%] left-[-5%] w-72 md:w-96 h-72 md:h-96 bg-primary/20 rounded-full blur-[100px] animate-pulse"></div>
-                <div className="absolute bottom-[-10%] right-[-5%] w-72 md:w-96 h-72 md:h-96 bg-accent/20 rounded-full blur-[100px]"></div>
-                <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
-            </div>
-
-            <div className="relative z-10 container mx-auto px-6 text-center">
-                {/* Badge */}
-                <div className="inline-block px-4 py-1.5 mb-6 rounded-full bg-white/5 border border-white/10 backdrop-blur-md">
-                    <span className="text-primary text-xs font-bold uppercase tracking-[0.2em]">The Ultimate Contest Arena</span>
-                </div>
-
-                {/* Main Heading */}
-                <h1 className="text-4xl md:text-7xl font-black text-white leading-tight tracking-tighter uppercase mb-6">
-                    Win the <span className="text-primary italic">Contest</span> <br />
-                    Lead the <span className="underline decoration-accent underline-offset-8">World</span>
-                </h1>
-
-                {/* Subtitle */}
-                <p className="max-w-2xl mx-auto text-slate-400 text-lg md:text-xl font-medium mb-10 font-outfit">
-                    Join thousands of creators, developers, and designers. 
-                    Showcase your talent, win amazing prizes, and get recognized globally.
-                </p>
-                <div className="max-w-3xl mx-auto">
-                    <div className="group relative flex flex-col md:flex-row items-center bg-white p-2 rounded-2xl md:rounded-[2rem] shadow-2xl transition-all focus-within:ring-4 ring-primary/20">
-                        <div className="flex-1 flex items-center w-full px-4">
-                            <svg className="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                            </svg>
-                            <input
-                                type="text"
-                                onChange={(e) => setSearch(e.target.value)}
-                                placeholder="Search by Contest Type (e.g. Image Design, Coding...)"
-                                className="w-full bg-transparent py-4 md:py-5 px-4 text-secondary outline-none font-bold text-base md:text-lg placeholder-slate-400"
-                            />
-                        </div>
-                        <button 
-                            onClick={handleSearch}
-                            className="w-full md:w-auto bg-secondary hover:bg-slate-800 text-white px-10 py-4 md:py-5 rounded-xl md:rounded-[1.5rem] font-black uppercase tracking-widest transition-all active:scale-95 shadow-lg"
+        <div className="relative w-full h-[500px] md:h-[700px]">
+            <Swiper
+                modules={[Navigation, Pagination, Autoplay, EffectFade]}
+                effect="fade"
+                navigation
+                pagination={{ clickable: true }}
+                autoplay={{ delay: 4000 }}
+                className="h-full w-full"
+            >
+                {slides.map((slide, index) => (
+                    <SwiperSlide key={index}>
+                        <div 
+                            className="relative h-full w-full flex items-center justify-center bg-cover bg-center"
+                            style={{ backgroundImage: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url(${slide.img})` }}
                         >
-                            Search
-                        </button>
-                    </div>
+                            <div className="text-center text-white px-4">
+                                <span className="bg-primary/20 text-primary px-4 py-1 rounded-full text-xs font-bold uppercase tracking-widest mb-4 inline-block">
+                                    {slide.btnText}
+                                </span>
+                                <h1 className="text-4xl md:text-7xl font-black uppercase italic leading-tight">
+                                    {slide.title}
+                                </h1>
+                                <p className="mt-4 text-lg text-slate-300 max-w-2xl mx-auto">
+                                    {slide.desc}
+                                </p>
+                            </div>
+                        </div>
+                    </SwiperSlide>
+                ))}
+            </Swiper>
 
-                    <div className="flex flex-wrap items-center justify-center gap-4 mt-6">
-                        <span className="text-slate-500 text-xs font-bold uppercase tracking-widest">Trending:</span>
-                        {['Business', 'Medical', 'Gaming', 'Creative'].map((tag) => (
-                            <button key={tag} className="text-xs font-bold text-slate-300 hover:text-primary transition-colors border-b border-white/10 hover:border-primary">
-                                #{tag}
-                            </button>
-                        ))}
-                    </div>
-                </div>
+            {/* --- Search Bar --- */}
+            <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-30 w-[90%] max-w-2xl">
+                <form onSubmit={handleSubmit} className="flex bg-white p-2 rounded-full shadow-2xl">
+                    <input 
+                        name="search"
+                        type="text" 
+                        placeholder="Search by Category (e.g. Design, Coding)" 
+                        className="w-full px-6 py-4 rounded-full border-none focus:ring-0 text-secondary font-bold"
+                    />
+                    <button className="bg-secondary text-white px-8 py-4 rounded-full font-black uppercase hover:bg-primary transition-all">
+                        Search
+                    </button>
+                </form>
             </div>
         </div>
     );

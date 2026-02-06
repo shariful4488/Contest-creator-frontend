@@ -100,10 +100,9 @@ const MyWinnings = () => {
                     ))}
                 </div>
             ) : (
-                /* Professional Empty State */
                 <div className="text-center py-20 px-6">
                     <div className="w-24 h-24 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-6 text-4xl grayscale">
-                        
+                        <FaTrophy className="text-slate-300" /> 
                     </div>
                     <h3 className="text-xl font-bold text-slate-400 uppercase tracking-widest">No Trophies Collected</h3>
                     <p className="text-slate-400 mt-2 max-w-sm mx-auto text-sm">Win a contest to see your name on the victory board!</p>
