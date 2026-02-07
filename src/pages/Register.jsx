@@ -104,7 +104,7 @@ const Register = () => {
                         <input
                             type="text"
                             {...register("name", { required: "Name is required" })}
-                            placeholder="John Doe"
+                            placeholder="Enter your full name"
                             className="input input-bordered rounded-xl focus:ring-2 ring-primary/20"
                         />
                         {errors.name && <span className="text-error text-xs mt-1">{errors.name.message}</span>}
@@ -127,7 +127,7 @@ const Register = () => {
                         <input
                             type="email"
                             {...register("email", { required: "Email is required" })}
-                            placeholder="example@mail.com"
+                            placeholder="Enter your email"
                             className="input input-bordered rounded-xl"
                         />
                         {errors.email && <span className="text-error text-xs mt-1">{errors.email.message}</span>}
@@ -142,7 +142,7 @@ const Register = () => {
                                 required: "Password is required",
                                 minLength: { value: 6, message: "Min 6 characters" }
                             })}
-                            placeholder="******"
+                            placeholder="Enter your password"
                             className="input input-bordered rounded-xl"
                         />
                         {errors.password && <span className="text-error text-xs mt-1">{errors.password.message}</span>}

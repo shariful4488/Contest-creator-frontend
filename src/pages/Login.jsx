@@ -61,7 +61,7 @@ const Login = () => {
             <input
               type="email"
               {...register("email", { required: "Email is required" })}
-              placeholder="name@company.com"
+              placeholder="Enter your email"
               className="input input-bordered w-full rounded-xl focus:ring-2 ring-primary/20 outline-none"
             />
             {errors.email && <p className="text-error text-xs mt-1">{errors.email.message}</p>}
@@ -72,7 +72,7 @@ const Login = () => {
             <input
               type="password"
               {...register("password", { required: "Password is required" })}
-              placeholder="••••••••"
+              placeholder="Password"
               className="input input-bordered w-full rounded-xl focus:ring-2 ring-primary/20 outline-none"
             />
             {errors.password && <p className="text-error text-xs mt-1">{errors.password.message}</p>}
