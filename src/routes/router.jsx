@@ -28,6 +28,7 @@ import Payment from "../pages/Payment";
 import SubmissionReview from "../pages/ManagerDashboard/SubmissionReview";
 import ExploreContests from "../pages/ExploreContests";
 import Leaderboard from "../pages/Leaderboard";
+import ReviewContestList from "../pages/ManagerDashboard/ReviewContestList";
 
 
 
@@ -99,6 +100,10 @@ const Router = createBrowserRouter([
             {
                path:"submission-review/:id",
                element:<SubmissionReview/>
+            },
+            {
+                path:'submission-review-list',
+                element:<ReviewContestList/>
             },
            
             // User Routes

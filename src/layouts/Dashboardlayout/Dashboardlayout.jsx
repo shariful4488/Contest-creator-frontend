@@ -98,6 +98,7 @@ const Dashboard = () => {
                                 <p className="text-slate-500 text-[10px] font-black uppercase tracking-widest mb-3 ml-4 mt-6">Creative Hub</p>
                                 <li><DashboardLink to="/dashboard/add-contest" icon={<FaFolderPlus />} label="Create New" /></li>
                                 <li><DashboardLink to="/dashboard/myCreated-contests" icon={<FaAddressCard />} label="Contest Studio" /></li>
+                                <li><DashboardLink to="/dashboard/submission-review-list" icon={<FaTrophy />} label="Submission Review" /></li>
                             </>
                         )}
 

@@ -3,11 +3,13 @@ import { FaEdit, FaTrashAlt, FaEye } from "react-icons/fa";
 import Swal from "sweetalert2";
 import { Link } from "react-router"; 
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+import useRole from "../../hooks/useRole"; 
 import useAuth from "../../hooks/useAuth";
 
 const MyCreatedContests = () => {
     const axiosSecure = useAxiosSecure(); 
     const { user } = useAuth();
+    const [role] = useRole(); 
 
     const { data: contests = [], refetch, isLoading } = useQuery({
         queryKey: ['my-contests', user?.email],
@@ -24,8 +26,8 @@ const MyCreatedContests = () => {
             text: "You won't be able to revert this!",
             icon: "warning",
             showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
+            confirmButtonColor: "#4f46e5",
+            cancelButtonColor: "#f43f5e",
             confirmButtonText: "Yes, delete it!"
         }).then((result) => {
             if (result.isConfirmed) {
@@ -97,7 +99,6 @@ const MyCreatedContests = () => {
                                         </span>
                                     </td>
 
-                 
                                     <td className="text-center">
                                         <Link to={`/dashboard/submission-review/${contest._id}`}>
                                             <button 
@@ -111,10 +112,14 @@ const MyCreatedContests = () => {
 
                                     <td className="text-center">
                                         <div className="flex justify-center items-center gap-2">
-                                            <Link to={`/dashboard/update-contest/${contest._id}`}>
+                                            <Link 
+                                                to={role === 'admin' || contest.status !== 'Accepted' ? `/dashboard/update-contest/${contest._id}` : "#"}
+                                                onClick={(e) => (role !== 'admin' && contest.status === 'Accepted') && e.preventDefault()}
+                                            >
                                                 <button 
-                                                    disabled={contest.status === 'Accepted'}
-                                                    className="p-2 rounded-xl text-blue-500 hover:bg-blue-50 transition-colors disabled:opacity-30" 
+                                                    disabled={role !== 'admin' && contest.status === 'Accepted'}
+                                                    className="p-2 rounded-xl text-blue-500 hover:bg-blue-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed" 
+                                                    title={contest.status === 'Accepted' ? "Cannot edit approved contest" : "Edit Contest"}
                                                 >
                                                     <FaEdit className="text-xl" />
                                                 </button>
@@ -122,8 +127,9 @@ const MyCreatedContests = () => {
 
                                             <button 
                                                 onClick={() => handleDelete(contest._id)}
-                                                disabled={contest.status === 'Accepted'}
-                                                className="p-2 rounded-xl text-red-500 hover:bg-red-50 transition-colors disabled:opacity-30" 
+                                                disabled={role !== 'admin' && contest.status === 'Accepted'}
+                                                className="p-2 rounded-xl text-red-500 hover:bg-red-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed" 
+                                                title={contest.status === 'Accepted' && role !== 'admin' ? "Approved contests can only be deleted by Admin" : "Delete Contest"}
                                             >
                                                 <FaTrashAlt className="text-xl" />
                                             </button>
