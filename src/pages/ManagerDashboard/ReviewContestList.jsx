@@ -15,7 +15,7 @@ const ReviewContestList = () => {
             return res.data;
         }
     });
-    const contestsWithSubmissions = contests.filter(contest => contest.participantCount > 0);
+    const contestsWithSubmissions = contests.filter(contest => contest.participationCount > 0);
 
     if (isLoading) {
         return (
@@ -27,7 +27,6 @@ const ReviewContestList = () => {
 
     return (
         <div className="p-4 md:p-10 font-outfit max-w-7xl mx-auto">
-            {/* Header */}
             <div className="mb-10 flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-slate-100 pb-8">
                 <div>
                     <h2 className="text-3xl md:text-4xl font-black text-secondary uppercase italic leading-tight">
@@ -80,7 +79,7 @@ const ReviewContestList = () => {
                                     <div className="flex flex-col items-end">
                                         <span className="text-[10px] uppercase font-bold text-slate-400">New Entries</span>
                                         <span className="text-xs font-bold text-secondary flex items-center gap-1">
-                                            <FaUsers className="text-primary" /> {contest.participantCount}
+                                            <FaUsers className="text-primary" /> {contest.participationCount}
                                         </span>
                                     </div>
                                 </div>
