@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "contest-creator-7e5d8"
-  }
+    "default": "contest-creator-7e5d8",
+    "prod": "contest-creator-7e5d8"
+  },
+  "targets": {},
+  "etags": {}
 }
