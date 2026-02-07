@@ -3,33 +3,32 @@ import ContestCard from "./ContestCard";
 import useAxiosPublic from "../hooks/useAxios";
 import { Link } from "react-router";
 
-
-const PopularContests = ({ searchText }) => {
+const PopularContests = ({ searchText = "" }) => {
     const axiosPublic = useAxiosPublic();
 
-    const { data: contests = [], isLoading } = useQuery({
-        queryKey: ['popular-contests'],
+    const { data: contestsData = {}, isLoading, isError } = useQuery({
+        queryKey: ['popular-contests', searchText], 
         queryFn: async () => {
-            const res = await axiosPublic.get('/all-contests'); 
+            const res = await axiosPublic.get(`/all-contests?search=${searchText}&size=50`); 
             return res.data;
         }
     });
+    const contests = contestsData.contests || [];
 
-    const filteredContests = contests.filter(contest => 
-        contest.contestCategory.toLowerCase().includes(searchText.toLowerCase())
-    );
-
-    
-    const popularDisplay = filteredContests
-        .sort((a, b) => b.attemptedCount - a.attemptedCount)
+    const popularDisplay = [...contests]
+        .sort((a, b) => (b.attemptedCount || 0) - (a.attemptedCount || 0))
         .slice(0, 6);
 
-    if (isLoading) return <div className="text-center py-10"><span className="loading loading-spinner loading-lg"></span></div>;
+    if (isLoading) return (
+        <div className="flex justify-center py-20">
+            <span className="loading loading-spinner loading-lg text-primary"></span>
+        </div>
+    );
 
     return (
-        <div className="py-20 container mx-auto px-4">
+        <div className="py-20 container mx-auto px-4 font-outfit">
             <div className="mb-12 text-center">
-                <h2 className="text-4xl font-black text-secondary uppercase italic">
+                <h2 className="text-3xl md:text-4xl font-black text-secondary uppercase italic">
                     Popular <span className="text-primary">Contests</span>
                 </h2>
                 <div className="w-20 h-1.5 bg-primary mx-auto mt-4 rounded-full"></div>
@@ -42,17 +41,16 @@ const PopularContests = ({ searchText }) => {
                     ))}
                 </div>
             ) : (
-               
-                <div className="text-center py-20 bg-slate-50 rounded-[40px] border-2 border-dashed">
-                    <h3 className="text-2xl font-bold text-slate-400 uppercase">
-                        No Contests found for "{searchText}"
+                <div className="text-center py-20 bg-slate-50 rounded-[40px] border-2 border-dashed border-slate-200">
+                    <h3 className="text-2xl font-bold text-slate-400 uppercase italic">
+                        No results found {searchText && `for "${searchText}"`}
                     </h3>
-                    <p className="text-slate-400 mt-2">Try searching for another category like 'Coding', 'Design' or 'Marketing'.</p>
+                    <p className="text-slate-500 mt-2">Try searching by name or category (e.g., Coding, Design)</p>
                 </div>
             )}
 
             <div className="text-center mt-12">
-                <Link to="/all-contests" className="btn btn-primary px-10 rounded-full font-bold uppercase italic shadow-lg">
+                <Link to="/all-contests" className="btn btn-primary btn-lg px-10 rounded-full font-bold uppercase italic shadow-xl text-white hover:scale-105 transition-transform">
                     Show All Contests
                 </Link>
             </div>

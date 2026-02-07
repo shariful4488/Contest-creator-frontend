@@ -1,12 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
-import { FaTrashAlt, FaCheckCircle } from "react-icons/fa";
+import { FaTrashAlt, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
 import Swal from "sweetalert2";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
+
 
 const ManageContests = () => {
     const axiosSecure = useAxiosSecure();
 
-    // অ্যাডমিন হিসেবে সব কন্টেস্ট (Pending + Accepted) পাওয়ার জন্য '/contests' ব্যবহার করা হয়েছে
+    // অ্যাডমিন হিসেবে সব কন্টেস্ট পাওয়ার জন্য
     const { data: contests = [], refetch } = useQuery({
         queryKey: ['all-contests-admin'],
         queryFn: async () => {
@@ -15,6 +16,7 @@ const ManageContests = () => {
         }
     });
 
+    // Confirm/Approve contest
     const handleConfirm = (id) => {
         axiosSecure.patch(`/contests/status/${id}`, { status: 'Accepted' })
             .then(res => {
@@ -25,12 +27,26 @@ const ManageContests = () => {
             });
     };
 
+    // Reject contest
+    const handleReject = (id) => {
+        axiosSecure.patch(`/contests/status/${id}`, { status: 'Rejected' })
+            .then(res => {
+                if (res.data.modifiedCount > 0) {
+                    refetch();
+                    Swal.fire("Rejected!", "Contest has been rejected.", "info");
+                }
+            });
+    };
+
+    // Delete contest
     const handleDelete = (id) => {
         Swal.fire({
             title: "Are you sure?",
             text: "This action cannot be undone!",
             icon: "warning",
             showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
             confirmButtonText: "Yes, delete it!"
         }).then((result) => {
             if (result.isConfirmed) {
@@ -45,40 +61,69 @@ const ManageContests = () => {
     };
 
     return (
-        <div className="p-5">
-            <h2 className="text-3xl font-bold mb-5">Manage Contests ({contests.length})</h2>
-            <div className="overflow-x-auto bg-white rounded-lg shadow">
+        <div className="p-5 font-outfit">
+            <div className="mb-8">
+                <h2 className="text-3xl font-black text-secondary uppercase italic">
+                    Manage <span className="text-primary">Contests</span>
+                </h2>
+                <p className="text-slate-400 font-medium">Total Contests: {contests.length}</p>
+            </div>
+
+            <div className="overflow-x-auto bg-white rounded-3xl border border-slate-100 shadow-sm">
                 <table className="table w-full">
-                    <thead>
-                        <tr>
-                            <th>Contest Name</th>
-                            <th>Creator</th>
+                    <thead className="bg-slate-50">
+                        <tr className="text-secondary uppercase text-[11px] tracking-widest border-none">
+                            <th className="py-5 pl-8">Contest Name</th>
+                            <th>Creator Email</th>
                             <th>Status</th>
-                            <th>Confirm</th>
-                            <th>Action</th>
+                            <th className="text-center">Confirm / Reject</th>
+                            <th className="text-center">Action</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody className="text-sm font-semibold text-slate-600">
                         {contests.map((contest) => (
-                            <tr key={contest._id}>
-                                <td>{contest.contestName}</td>
+                            <tr key={contest._id} className="hover:bg-slate-50/50 border-b border-slate-50 transition-colors">
+                                <td className="py-4 pl-8 font-bold text-secondary">
+                                    {contest.contestName}
+                                </td>
                                 <td>{contest.creatorEmail}</td>
                                 <td>
-                                    <span className={`badge ${contest.status === 'Accepted' ? 'badge-success' : 'badge-warning'}`}>
+                                    <span className={`badge badge-sm font-bold p-3 uppercase tracking-tighter ${
+                                        contest.status === 'Accepted' ? 'badge-success text-white' : 
+                                        contest.status === 'Rejected' ? 'badge-error text-white' : 'badge-warning text-white'
+                                    }`}>
                                         {contest.status || 'Pending'}
                                     </span>
                                 </td>
-                                <td>
-                                    <button 
-                                        onClick={() => handleConfirm(contest._id)}
-                                        disabled={contest.status === 'Accepted'}
-                                        className="btn btn-ghost text-green-500"
-                                    >
-                                        <FaCheckCircle size={20} />
-                                    </button>
+                                <td className="text-center">
+                                    <div className="flex justify-center gap-2">
+                                        {/* Confirm Button */}
+                                        <button 
+                                            onClick={() => handleConfirm(contest._id)}
+                                            disabled={contest.status === 'Accepted'}
+                                            className="btn btn-ghost btn-xs text-green-500 hover:bg-green-50 tooltip"
+                                            data-tip="Confirm"
+                                        >
+                                            <FaCheckCircle size={20} />
+                                        </button>
+
+                                        {/* Reject Button */}
+                                        <button 
+                                            onClick={() => handleReject(contest._id)}
+                                            disabled={contest.status === 'Rejected' || contest.status === 'Accepted'}
+                                            className="btn btn-ghost btn-xs text-orange-500 hover:bg-orange-50 tooltip"
+                                            data-tip="Reject"
+                                        >
+                                            <FaTimesCircle size={20} />
+                                        </button>
+                                    </div>
                                 </td>
-                                <td>
-                                    <button onClick={() => handleDelete(contest._id)} className="btn btn-ghost text-red-500">
+                                <td className="text-center">
+                                    <button 
+                                        onClick={() => handleDelete(contest._id)} 
+                                        className="btn btn-ghost btn-xs text-red-500 hover:bg-red-50 tooltip"
+                                        data-tip="Delete"
+                                    >
                                         <FaTrashAlt size={18} />
                                     </button>
                                 </td>

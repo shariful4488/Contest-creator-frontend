@@ -3,25 +3,37 @@
 
 @plugin "daisyui";
 
+@theme {
+  --font-family-outfit: "Outfit", sans-serif;
+  
+  
+  --color-primary: #6366f1;    
+  --color-secondary: #0f172a;  
+  --color-accent: #10b981;     
+  --color-neutral: #1e293b;
+}
+
 @plugin "daisyui/theme" {
   name: "light";
   default: true;
-  --color-primary: #0061FF;     
-  --color-secondary: #1E293B;    
-  --color-accent: #00D1FF;      
-  --color-base-100: #FFFFFF;
-  --color-base-200: #F8FAFC;   
+  --color-primary: #6366f1;     
+  --color-secondary: #0f172a;    
+  --color-accent: #10b981;      
+  --primary-content: #ffffff; 
+  --color-base-100: #ffffff;
+  --color-base-200: #f1f5f9;   
+  --color-base-300: #e2e8f0;
 }
-
 
 @plugin "daisyui/theme" {
   name: "dark";
-  --color-primary: #3b82f6;
-  --color-base-100: #0f172a; 
+  --color-primary: #818cf8;
+  --color-base-100: #020617;   
+  --color-base-200: #0f172a;
   --color-base-content: #f8fafc; 
 }
 
 body {
-  font-family: "Outfit", sans-serif;
-  @apply bg-base-200 text-base-content; 
+  font-family: var(--font-family-outfit);
+  @apply bg-base-200 text-slate-800 antialiased; 
 }
