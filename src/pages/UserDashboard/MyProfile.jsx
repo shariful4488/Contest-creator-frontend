@@ -1,133 +1,85 @@
-import { useQuery } from "@tanstack/react-query";
 import useAuth from "../../hooks/useAuth";
-import useAxiosSecure from "../../hooks/useAxiosSecure";
+import useRole from "../../hooks/useRole";
+import { FaUserShield, FaUsers, FaTasks, FaEnvelope, FaFingerprint, FaCog } from "react-icons/fa";
 
 const MyProfile = () => {
     const { user } = useAuth();
-    const axiosSecure = useAxiosSecure();
+    const [role] = useRole();
 
-    const { data: userData = {}, isLoading } = useQuery({
-        queryKey: ['user-profile', user?.email],
-        queryFn: async () => {
-            const res = await axiosSecure.get(`/users/${user?.email}`);
-            return res.data;
-        }
-    });
-
-    if (isLoading) return (
-        <div className="flex justify-center items-center min-h-[400px]">
-            <span className="loading loading-spinner loading-lg text-primary"></span>
-        </div>
-    );
+    const isAdmin = role === 'admin';
 
     return (
-        <div className="max-w-[1440px] mx-auto p-4 sm:p-6 md:p-10 font-outfit">
-            
-            {/* --- Header Section --- */}
-            <div className="mb-8 md:mb-12 text-center md:text-left">
-                <h2 className="text-3xl sm:text-4xl md:text-5xl font-black text-secondary uppercase italic tracking-tighter">
-                    My <span className="text-primary">Profile</span>
-                </h2>
-                <div className="w-16 h-1 bg-primary mt-2 mx-auto md:mx-0 rounded-full"></div>
+        <div className="animate-fade-in font-outfit">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-10">
+                <div>
+                    <h2 className="text-3xl font-black text-secondary uppercase italic leading-none">
+                        {isAdmin ? "Admin" : "User"} <span className="text-primary">Profile</span>
+                    </h2>
+                    <p className="text-slate-400 text-sm mt-2 font-medium">
+                        {isAdmin ? "Platform Control & Personal Information" : "Your personal journey and stats"}
+                    </p>
+                </div>
+                <button className={`btn btn-sm rounded-full px-6 shadow-lg transition-all ${isAdmin ? 'btn-secondary' : 'btn-primary text-white'}`}>
+                    <FaCog /> Settings
+                </button>
             </div>
 
-            {/* --- Main Grid Layout --- */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 md:gap-8">
-                
-                {/* Left Side: Profile Info (4/12 Column) */}
-                <div className="lg:col-span-4 flex flex-col gap-6">
-                    <div className="bg-white rounded-[2rem] p-6 sm:p-8 border border-slate-100 shadow-sm flex flex-col items-center text-center h-full">
-                        <div className="relative group">
-                            <div className="w-28 h-28 sm:w-36 sm:h-36 rounded-full ring-4 ring-primary ring-offset-4 overflow-hidden mx-auto transition-transform group-hover:scale-105 duration-300">
-                                <img 
-                                    src={user?.photoURL || "https://i.ibb.co/3S46BvD/user.png"} 
-                                    alt="Profile" 
-                                    className="w-full h-full object-cover"
-                                />
-                            </div>
-                            <div className="absolute bottom-2 right-2 bg-green-500 w-5 h-5 rounded-full border-4 border-white shadow-sm"></div>
-                        </div>
-                        
-                        <div className="mt-6 w-full">
-                            <h3 className="text-xl sm:text-2xl font-black text-secondary truncate px-2">
-                                {user?.displayName}
-                            </h3>
-                            <p className="text-slate-400 font-medium text-sm truncate mb-6">
-                                {user?.email}
-                            </p>
-                            
-                            <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 flex flex-col items-center">
-                                <p className="text-[10px] uppercase font-bold text-slate-400 tracking-widest mb-1">Account Role</p>
-                                <span className="badge badge-secondary badge-outline font-black px-5 py-3">
-                                    CONTESTANT
-                                </span>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <div className="lg:col-span-4 bg-white border border-slate-100 rounded-[2.5rem] p-8 shadow-sm text-center relative overflow-hidden">
+                    {isAdmin && <div className="absolute top-0 right-0 bg-primary text-white text-[10px] font-black px-6 py-1 rotate-45 translate-x-4 translate-y-2 uppercase">Root</div>}
+                    
+                    <div className="avatar ring-4 ring-primary ring-offset-4 rounded-full w-28 h-28 mb-6 mx-auto">
+                        <img src={user?.photoURL || "https://i.ibb.co/3S46BvD/user.png"} className="rounded-full" alt="Avatar" />
+                    </div>
+
+                    <h3 className="text-2xl font-black text-secondary uppercase italic">{user?.displayName}</h3>
+                    
+                    <div className={`mt-3 inline-flex items-center gap-2 px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${isAdmin ? 'bg-secondary text-white' : 'bg-primary/10 text-primary'}`}>
+                        {isAdmin ? <FaUserShield /> : <FaFingerprint />} {role} Mode
+                    </div>
+
+                    <div className="mt-8 space-y-3">
+                        <div className="flex items-center gap-3 bg-slate-50 p-3 rounded-2xl text-left border border-slate-100">
+                            <FaEnvelope className="text-primary" />
+                            <div className="overflow-hidden">
+                                <p className="text-[9px] font-black text-slate-400 uppercase tracking-tighter">Registered Email</p>
+                                <p className="text-xs font-bold text-secondary truncate">{user?.email}</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                {/* Right Side: Stats & Metrics (8/12 Column) */}
-                <div className="lg:col-span-8 flex flex-col gap-6">
-                    
-                    {/* Winning Stats Card (Dark Theme) */}
-                    <div className="bg-secondary rounded-[2rem] p-6 sm:p-10 text-white relative overflow-hidden shadow-xl shadow-slate-200">
-                        {/* Background Decoration */}
-                        <div className="absolute top-[-20%] right-[-10%] w-48 h-48 bg-primary/20 rounded-full blur-3xl"></div>
-                        
-                        <div className="relative flex flex-col sm:flex-row justify-between items-center gap-8">
-                            <div className="text-center sm:text-left">
-                                <h4 className="text-primary font-bold uppercase tracking-widest text-[10px] mb-2">Achievement Summary</h4>
-                                <h2 className="text-3xl sm:text-4xl font-black italic uppercase leading-none">
-                                    Top <span className="text-primary">Performer</span>
-                                </h2>
-                                <p className="text-white/60 text-sm mt-4 max-w-xs leading-relaxed">
-                                    You've shown incredible skill! Your wins place you among the elite participants.
-                                </p>
+                <div className="lg:col-span-8 space-y-6">
+                    {isAdmin ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 h-full">
+                            <div className="bg-primary p-8 rounded-[2.5rem] text-white flex flex-col justify-between shadow-xl shadow-primary/20 group hover:-translate-y-1 transition-transform">
+                                <div>
+                                    <FaUsers className="text-4xl mb-4 opacity-50 group-hover:scale-110 transition-transform" />
+                                    <p className="font-black uppercase italic text-xs tracking-widest opacity-80">Platform Management</p>
+                                    <h4 className="text-4xl font-black italic mt-2 uppercase">Manage Users</h4>
+                                </div>
+                                <p className="text-sm mt-4 text-blue-100 italic">Total 124 Active users on site</p>
                             </div>
-                            
-                            <div className="flex flex-col items-center bg-white/5 backdrop-blur-xl px-8 py-6 rounded-3xl border border-white/10 w-full sm:w-auto min-w-[140px]">
-                                <span className="text-primary text-5xl sm:text-6xl font-black italic">
-                                    {userData.winCount || 0}
-                                </span>
-                                <span className="text-[10px] font-bold uppercase tracking-widest mt-2 text-white/70">
-                                    Wins Total
-                                </span>
+
+                            <div className="bg-secondary p-8 rounded-[2.5rem] text-white flex flex-col justify-between shadow-xl shadow-slate-300 group hover:-translate-y-1 transition-transform">
+                                <div>
+                                    <FaTasks className="text-4xl mb-4 text-primary opacity-80 group-hover:scale-110 transition-transform" />
+                                    <p className="font-black uppercase italic text-xs tracking-widest opacity-60">Approvals</p>
+                                    <h4 className="text-4xl font-black italic mt-2 uppercase">Contest Requests</h4>
+                                </div>
+                                <p className="text-sm mt-4 text-slate-400 italic">05 Pending approvals required</p>
                             </div>
                         </div>
-                    </div>
-
-                    {/* Progress & Performance Grid */}
-                    <div className="bg-white rounded-[2rem] p-6 sm:p-8 border border-slate-100 shadow-sm">
-                        <h4 className="text-secondary font-black uppercase text-lg mb-8 flex items-center gap-2">
-                            <span className="w-2 h-6 bg-primary rounded-full"></span>
-                            Performance Metrics
-                        </h4>
-                        
-                        <div className="space-y-8">
-                            {/* Metric 1 */}
-                            <div className="w-full">
-                                <div className="flex justify-between items-end mb-3">
-                                    <span className="text-xs font-black text-slate-500 uppercase tracking-wider">Consistency</span>
-                                    <span className="text-sm font-black text-primary italic">85%</span>
-                                </div>
-                                <div className="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
-                                    <div className="bg-primary h-full w-[85%] rounded-full transition-all duration-1000 shadow-[0_0_12px_rgba(255,191,0,0.3)]"></div>
-                                </div>
+                    ) : (
+                        <div className="bg-white border border-slate-100 rounded-[2.5rem] p-10 h-full flex flex-col justify-center items-center text-center">
+                            <div className="bg-slate-50 w-20 h-20 rounded-full flex items-center justify-center mb-6">
+                                <FaTasks className="text-3xl text-primary" />
                             </div>
-                            
-                            {/* Metric 2 */}
-                            <div className="w-full">
-                                <div className="flex justify-between items-end mb-3">
-                                    <span className="text-xs font-black text-slate-500 uppercase tracking-wider">Participation</span>
-                                    <span className="text-sm font-black text-secondary italic">60%</span>
-                                </div>
-                                <div className="w-full bg-slate-100 h-3 rounded-full overflow-hidden">
-                                    <div className="bg-secondary h-full w-[60%] rounded-full transition-all duration-1000"></div>
-                                </div>
-                            </div>
+                            <h4 className="text-2xl font-black text-secondary uppercase italic">Performance Snapshot</h4>
+                            <p className="text-slate-400 mt-2 max-w-sm">You haven't participated in any contests yet. Start your journey today and win prizes!</p>
+                            <button className="btn btn-primary btn-outline mt-8 rounded-full px-8 font-black uppercase italic text-xs tracking-widest">Explore Contests</button>
                         </div>
-                    </div>
-
+                    )}
                 </div>
             </div>
         </div>
