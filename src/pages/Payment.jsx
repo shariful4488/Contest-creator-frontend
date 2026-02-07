@@ -11,8 +11,6 @@ const Payment = () => {
     const axiosSecure = useAxiosSecure();
     const { user } = useAuth();
     const navigate = useNavigate();
-
-    // কন্টেস্টের ডিটেইলস নিয়ে আসা
     const { isLoading, data: contest, isError } = useQuery({
         queryKey: ['contest-payment', id],
         queryFn: async () => {
@@ -25,18 +23,16 @@ const Payment = () => {
         if (!contest) return;
 
         const paymentInfo = {
-            cost: contest.contestPrice || contest.price, // আপনার DB অনুযায়ী ফিল্ড নেম চেক করুন
+            cost: contest.contestPrice || contest.price, 
             contestId: contest._id,
             userEmail: user?.email,
             contestName: contest.contestName
         };
 
         try {
-            // ১. সার্ভারে পেমেন্ট সেশন তৈরির রিকোয়েস্ট
             const res = await axiosSecure.post('/create-checkout-session', paymentInfo);
             
             if (res.data.url) {
-                // ২. স্ট্রাইপ পেমেন্ট পেজে রিডাইরেক্ট করা
                 window.location.href = res.data.url;
             }
         } catch (error) {
@@ -48,8 +44,6 @@ const Payment = () => {
             });
         }
     };
-
-    // লোডিং অবস্থা
     if (isLoading) {
         return (
             <div className="flex justify-center items-center min-h-screen">
@@ -58,7 +52,6 @@ const Payment = () => {
         );
     }
 
-    // এরর বা ডাটা না থাকলে
     if (isError || !contest) {
         return (
             <div className="min-h-screen flex flex-col justify-center items-center">

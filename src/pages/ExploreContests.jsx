@@ -9,9 +9,7 @@ const ExploreContests = () => {
     const [search, setSearch] = useState('');
     const [category, setCategory] = useState('All');
     const [currentPage, setCurrentPage] = useState(0);
-    const size = 6; // রিকোয়ারমেন্ট অনুযায়ী প্রতি পেজে ৬টি কার্ড
-
-    // আপনার দেওয়া নতুন ক্যাটাগরি লিস্ট
+    const size = 6; 
     const categories = [
         'All', 
         'Image Design', 
@@ -27,7 +25,6 @@ const ExploreContests = () => {
     const { data: contestsData = {}, isLoading } = useQuery({
         queryKey: ['all-contests', search, category, currentPage],
         queryFn: async () => {
-            // কুয়েরি প্যারামিটারে পেজ এবং সাইজ পাঠানো হয়েছে
             const res = await axiosPublic.get(`/all-contests?search=${search}&category=${category}&page=${currentPage}&size=${size}`);
             return res.data;
         }
@@ -35,8 +32,6 @@ const ExploreContests = () => {
 
     const contests = contestsData.contests || [];
     const totalPages = contestsData.totalPages || 0;
-
-    // ক্যাটাগরি চেঞ্জ হলে পেজ ১-এ ফেরত নেওয়া
     const handleCategoryChange = (cat) => {
         setCategory(cat);
         setCurrentPage(0);
@@ -44,7 +39,6 @@ const ExploreContests = () => {
 
     return (
         <div className="max-w-7xl mx-auto px-4 py-8 md:py-16 font-outfit">
-            {/* Header Section */}
             <div className="text-center mb-10 md:mb-16">
                 <h2 className="text-3xl md:text-5xl font-black text-secondary uppercase italic tracking-tight">
                     Explore <span className="text-primary">Contests</span>
@@ -54,9 +48,7 @@ const ExploreContests = () => {
                 </p>
             </div>
 
-            {/* Search & Filter Section */}
             <div className="flex flex-col gap-6 mb-12">
-                {/* Search Bar - Responsive */}
                 <div className="relative max-w-2xl mx-auto w-full group">
                     <input 
                         type="text"
@@ -64,13 +56,11 @@ const ExploreContests = () => {
                         placeholder="Search by contest name..." 
                         onChange={(e) => {
                             setSearch(e.target.value);
-                            setCurrentPage(0); // সার্চ করলে প্রথম পেজে যাবে
+                            setCurrentPage(0);
                         }}
                     />
                     <FaSearch className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors" />
                 </div>
-
-                {/* Categories - Horizontal Scroll on Mobile */}
                 <div className="flex overflow-x-auto pb-4 no-scrollbar -mx-4 px-4 md:justify-center">
                     <div className="flex gap-2 p-1 bg-slate-100 rounded-2xl border border-slate-200 w-max">
                         {categories.map(cat => (
@@ -89,7 +79,6 @@ const ExploreContests = () => {
                 </div>
             </div>
 
-            {/* Contests Grid */}
             {isLoading ? (
                 <div className="flex flex-col items-center justify-center py-32 gap-4">
                     <span className="loading loading-dots loading-lg text-primary"></span>
@@ -112,7 +101,6 @@ const ExploreContests = () => {
                         )}
                     </div>
 
-                    {/* Pagination - Responsive Buttons */}
                     {totalPages > 1 && (
                         <div className="flex flex-wrap justify-center items-center gap-3 mt-16">
                             <button 

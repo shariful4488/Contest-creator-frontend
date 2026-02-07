@@ -4,7 +4,6 @@ const CountdownTimer = ({ deadline }) => {
     const [timeLeft, setTimeLeft] = useState("Calculating...");
 
     useEffect(() => {
-        // যদি ডেডলাইন না থাকে তবে ক্যালকুলেট করবে না
         if (!deadline) return;
 
         const calculateTime = () => {
@@ -31,7 +30,7 @@ const CountdownTimer = ({ deadline }) => {
         };
 
         const timer = setInterval(calculateTime, 1000);
-        calculateTime(); // মাউন্ট হওয়ার সাথে সাথে রান হবে
+        calculateTime(); 
 
         return () => clearInterval(timer);
     }, [deadline]);

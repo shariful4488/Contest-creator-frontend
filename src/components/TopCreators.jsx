@@ -46,12 +46,10 @@ const TopCreators = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
                     {creators.map((creator) => (
                         <div key={creator.id} className="group relative">
-                            {/* Card Design */}
                             <div className="bg-slate-50 rounded-[2.5rem] p-8 pt-20 transition-all duration-500 hover:bg-secondary hover:shadow-2xl hover:shadow-secondary/30 group-hover:-translate-y-4">
                                 
-                                {/* Image positioned half-out */}
                                 <div className="absolute -top-10 left-10">
-                                    <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-[2rem] overflow-hidden border-8 border-white shadow-xl rotate-12 group-hover:rotate-0 transition-transform duration-500">
+                                    <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-4xl overflow-hidden border-8 border-white shadow-xl rotate-12 group-hover:rotate-0 transition-transform duration-500">
                                         <img 
                                             src={creator.image} 
                                             alt={creator.name} 

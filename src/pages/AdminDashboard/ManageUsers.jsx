@@ -5,8 +5,6 @@ import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const ManageUsers = () => {
     const axiosPublic = useAxiosSecure();
-
-    // সব ইউজারদের ডাটা নিয়ে আসা
     const { data: users = [], refetch } = useQuery({
         queryKey: ['users'],
         queryFn: async () => {
@@ -15,12 +13,11 @@ const ManageUsers = () => {
         }
     });
 
-    // রোল পরিবর্তন করার ফাংশন
     const handleUpdateRole = (user, newRole) => {
         axiosPublic.patch(`/users/role/${user._id}`, { role: newRole })
             .then(res => {
                 if (res.data.modifiedCount > 0) {
-                    refetch(); // টেবিল আপডেট করার জন্য
+                    refetch(); 
                     Swal.fire({
                         position: "top-end",
                         icon: "success",
@@ -43,7 +40,6 @@ const ManageUsers = () => {
 
             <div className="overflow-x-auto rounded-3xl border border-slate-100 shadow-sm">
                 <table className="table w-full">
-                    {/* Head */}
                     <thead className="bg-slate-50">
                         <tr className="text-secondary uppercase text-[11px] tracking-widest border-none">
                             <th className="py-5 pl-8">User Info</th>
@@ -77,7 +73,6 @@ const ManageUsers = () => {
                                 </td>
                                 <td className="text-center">
                                     <div className="flex justify-center gap-2">
-                                        {/* Make Admin Button */}
                                         <button 
                                             onClick={() => handleUpdateRole(user, 'admin')}
                                             disabled={user.role === 'admin'}
@@ -86,8 +81,6 @@ const ManageUsers = () => {
                                         >
                                             <FaUserShield className="text-lg" />
                                         </button>
-
-                                        {/* Make Manager/Creator Button */}
                                         <button 
                                             onClick={() => handleUpdateRole(user, 'creator')}
                                             disabled={user.role === 'creator'}

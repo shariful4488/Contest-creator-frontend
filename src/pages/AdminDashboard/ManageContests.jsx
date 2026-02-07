@@ -6,8 +6,6 @@ import useAxiosSecure from "../../hooks/useAxiosSecure";
 
 const ManageContests = () => {
     const axiosSecure = useAxiosSecure();
-
-    // অ্যাডমিন হিসেবে সব কন্টেস্ট পাওয়ার জন্য
     const { data: contests = [], refetch } = useQuery({
         queryKey: ['all-contests-admin'],
         queryFn: async () => {
@@ -16,7 +14,6 @@ const ManageContests = () => {
         }
     });
 
-    // Confirm/Approve contest
     const handleConfirm = (id) => {
         axiosSecure.patch(`/contests/status/${id}`, { status: 'Accepted' })
             .then(res => {
@@ -27,7 +24,6 @@ const ManageContests = () => {
             });
     };
 
-    // Reject contest
     const handleReject = (id) => {
         axiosSecure.patch(`/contests/status/${id}`, { status: 'Rejected' })
             .then(res => {
@@ -38,7 +34,6 @@ const ManageContests = () => {
             });
     };
 
-    // Delete contest
     const handleDelete = (id) => {
         Swal.fire({
             title: "Are you sure?",
@@ -97,7 +92,6 @@ const ManageContests = () => {
                                 </td>
                                 <td className="text-center">
                                     <div className="flex justify-center gap-2">
-                                        {/* Confirm Button */}
                                         <button 
                                             onClick={() => handleConfirm(contest._id)}
                                             disabled={contest.status === 'Accepted'}
@@ -106,8 +100,6 @@ const ManageContests = () => {
                                         >
                                             <FaCheckCircle size={20} />
                                         </button>
-
-                                        {/* Reject Button */}
                                         <button 
                                             onClick={() => handleReject(contest._id)}
                                             disabled={contest.status === 'Rejected' || contest.status === 'Accepted'}

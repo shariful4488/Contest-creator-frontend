@@ -5,7 +5,7 @@ import { useEffect } from "react";
 import useAuth from "./useAuth";
 
 const axiosSecure = axios.create({
-    baseURL: "http://localhost:5000",
+    baseURL: "https://create-contest-server.vercel.app",
 });
 
 const useAxiosSecure = () => {
@@ -36,7 +36,6 @@ const useAxiosSecure = () => {
             }
         );
 
-        // 🧹 cleanup (VERY IMPORTANT)
         return () => {
             axiosSecure.interceptors.request.eject(requestInterceptor);
             axiosSecure.interceptors.response.eject(responseInterceptor);

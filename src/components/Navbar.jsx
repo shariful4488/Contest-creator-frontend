@@ -80,7 +80,7 @@ const Navbar = () => {
         <div className="flex justify-between h-20 items-center">
           <div className="shrink-0 flex items-center">
             <Link to="/" onClick={() => window.scrollTo(0, 0)} className="flex items-center gap-2 group">
-              <div className="bg-gradient-to-tr from-primary to-accent p-2 rounded-xl shadow-lg shadow-primary/20 group-hover:rotate-12 transition-all">
+              <div className="bg-linear-to-tr from-primary to-accent p-2 rounded-xl shadow-lg shadow-primary/20 group-hover:rotate-12 transition-all">
                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
@@ -114,7 +114,7 @@ const Navbar = () => {
                     <img src={user?.photoURL || "https://i.ibb.co/mR7093p/user.png"} alt="profile" referrerPolicy="no-referrer" />
                   </div>
                 </label>
-                <ul tabIndex={0} className="mt-4 z-[1] p-3 shadow-2xl menu menu-sm dropdown-content bg-base-100 rounded-2xl w-60 border border-base-200 animate-in slide-in-from-top-2 duration-200">
+                <ul tabIndex={0} className="mt-4 z-1 p-3 shadow-2xl menu menu-sm dropdown-content bg-base-100 rounded-2xl w-60 border border-base-200 animate-in slide-in-from-top-2 duration-200">
                   <div className="px-4 py-3 border-b border-base-200 mb-2 bg-slate-50 rounded-t-xl">
                     <p className="font-bold text-base-content truncate">{user?.displayName || "Anonymous User"}</p>
                     <p className="text-[10px] text-slate-500 truncate font-semibold uppercase tracking-wider">{user?.email}</p>
@@ -154,7 +154,7 @@ const Navbar = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" />
                 </svg>
               </label>
-              <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-4 shadow-xl bg-base-100 rounded-xl w-64 border border-base-200 gap-2 font-outfit">
+              <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-1 p-4 shadow-xl bg-base-100 rounded-xl w-64 border border-base-200 gap-2 font-outfit">
                 {navLinks}
                 {!user && (
                   <>

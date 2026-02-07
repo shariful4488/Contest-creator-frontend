@@ -19,7 +19,7 @@ const Winner = () => {
 
     return (
         <div className="py-24 bg-white relative overflow-hidden font-outfit">
-            <div className="absolute top-0 right-0 w-1/3 h-full bg-slate-50 skew-x-[-12deg] translate-x-20 hidden lg:block"></div>
+            <div className="absolute top-0 right-0 w-1/3 h-full bg-slate-50 -skew-x-12 translate-x-20 hidden lg:block"></div>
 
             <div className="container mx-auto px-4 md:px-10 relative z-10">
                 <div className="flex flex-col lg:flex-row items-center gap-16">       
@@ -61,7 +61,7 @@ const Winner = () => {
                                 <div className="relative mb-6">
                                     <img 
                                         src={winner.img} 
-                                        className="w-full aspect-square object-cover rounded-[2rem] shadow-lg" 
+                                        className="w-full aspect-square object-cover rounded-4xl shadow-lg" 
                                         alt={winner.name} 
                                     />
                                     <div className="absolute -bottom-3 -right-3 bg-primary w-12 h-12 rounded-2xl flex items-center justify-center shadow-lg text-secondary text-xl">
@@ -81,7 +81,7 @@ const Winner = () => {
                             </div>
                         ))}
 
-                        <div className="hidden xl:block absolute -right-10 top-20 animate-bounce duration-[3000ms]">
+                        <div className="hidden xl:block absolute -right-10 top-20 animate-bounce duration-3000">
                              <div className="bg-white p-4 rounded-3xl shadow-xl border border-slate-50 flex items-center gap-4">
                                 <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-600 text-xl">
                                     <FaCheckCircle />

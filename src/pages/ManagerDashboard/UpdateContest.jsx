@@ -4,7 +4,7 @@ import useAxiosPublic from "../../hooks/useAxios";
 import Swal from "sweetalert2";
 
 const UpdateContest = () => {
-    const contest = useLoaderData(); // রাউটার থেকে কন্টেস্টের ডাটা লোড হবে
+    const contest = useLoaderData(); 
     const { register, handleSubmit, reset } = useForm();
     const axiosPublic = useAxiosPublic();
     const navigate = useNavigate();
@@ -38,12 +38,10 @@ const UpdateContest = () => {
             
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {/* Name */}
                     <div className="form-control">
                         <label className="label font-bold text-slate-600">Contest Name</label>
                         <input type="text" defaultValue={contest.contestName} {...register("name")} className="input input-bordered rounded-xl" required />
                     </div>
-                    {/* Category */}
                     <div className="form-control">
                         <label className="label font-bold text-slate-600">Category</label>
                         <select defaultValue={contest.contestCategory} {...register("category")} className="select select-bordered rounded-xl">
@@ -56,25 +54,20 @@ const UpdateContest = () => {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {/* Image URL */}
                     <div className="form-control">
                         <label className="label font-bold text-slate-600">Image URL</label>
                         <input type="text" defaultValue={contest.image} {...register("image")} className="input input-bordered rounded-xl" />
                     </div>
-                    {/* Deadline */}
                     <div className="form-control">
                         <label className="label font-bold text-slate-600">Deadline</label>
                         <input type="date" defaultValue={contest.deadline} {...register("deadline")} className="input input-bordered rounded-xl" required />
                     </div>
                 </div>
-
-                {/* Prize */}
                 <div className="form-control">
                     <label className="label font-bold text-slate-600">Prize Money</label>
                     <input type="number" defaultValue={contest.prizeMoney} {...register("prize")} className="input input-bordered rounded-xl" required />
                 </div>
 
-                {/* Description */}
                 <div className="form-control">
                     <label className="label font-bold text-slate-600">Description</label>
                     <textarea defaultValue={contest.description} {...register("description")} className="textarea textarea-bordered rounded-xl h-24" required></textarea>

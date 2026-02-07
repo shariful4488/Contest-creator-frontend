@@ -3,7 +3,7 @@ import Banner from '../../components/Banner';
 import PopularContests from '../../components/PopularContests';
 import Winner from '../../components/Winner';
 import TopCreators from '../../components/TopCreators';
-import Footer from '../../components/Footer';
+
 
 const Home = () => {
 
@@ -18,7 +18,7 @@ const Home = () => {
             <PopularContests searchText={searchText}/>
             <TopCreators/>
             <Winner/>
-            <Footer/>
+            
         </div>
     );
 };

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const  axiosInstanc = axios.create({
-    baseURL: 'http://localhost:5000' 
+    baseURL: 'https://create-contest-server.vercel.app' 
 });
 
 const useAxiosPublic = () => {

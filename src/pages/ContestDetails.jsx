@@ -33,7 +33,6 @@ const ContestDetails = () => {
         winnerImage
     } = contest;
 
-    // ডেডলাইন শেষ হয়েছে কি না চেক (লাইভ কাউন্টডাউনের পাশাপাশি এটি বাটন ডিজেবল করতে লাগবে)
     const isDeadlineOver = contestDeadline ? new Date() > new Date(contestDeadline) : false;
 
     return (
@@ -64,7 +63,6 @@ const ContestDetails = () => {
 
                     <h2 className="text-4xl font-black text-secondary leading-tight mb-2">{contestName}</h2>
                     
-                    {/* লাইভ কাউন্টডাউন সেকশন */}
                     <div className="mb-6 bg-slate-50 p-4 rounded-2xl border border-dashed border-slate-200">
                         <p className="text-[10px] font-bold text-slate-400 uppercase mb-2 tracking-widest">Time Remaining</p>
                         {contestDeadline ? (
@@ -87,7 +85,6 @@ const ContestDetails = () => {
                         </div>
                     </div>
 
-                    {/* বাটন এবং উইনার সেকশন */}
                     <div className="card-actions">
                         {winnerName ? (
                             <div className="w-full p-5 bg-yellow-50 border border-yellow-200 rounded-2xl flex items-center gap-4">

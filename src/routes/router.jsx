@@ -71,7 +71,7 @@ const Router = createBrowserRouter([
         path: "dashboard",
         element: <PrivateRoute><Dashboard /></PrivateRoute>,
         children: [
-            // Admin Only Route 
+            // Admin  Route 
             { 
                 path: "manage-users", 
                 element: <AdminRoute><ManageUsers /></AdminRoute> 

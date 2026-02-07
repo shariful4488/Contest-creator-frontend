@@ -34,7 +34,6 @@ const CheckoutForm = ({ contestId, price }) => {
         if (error) {
             Swal.fire("Error", error.message, "error");
         } else {
-            // ২. পেমেন্ট কনফার্ম করা
             const { paymentIntent, error: confirmError } = await stripe.confirmCardPayment(clientSecret, {
                 payment_method: {
                     card: card,
@@ -58,7 +57,7 @@ const CheckoutForm = ({ contestId, price }) => {
                 const res = await axiosPublic.post('/payments', paymentInfo);
                 if (res.data.insertedId) {
                     Swal.fire("Success", "Registration Successful!", "success");
-                    navigate(`/contest-details/${contestId}`); // আবার ডিটেইলস পেজে ফিরে যাবে
+                    navigate(`/contest-details/${contestId}`); 
                 }
             }
         }

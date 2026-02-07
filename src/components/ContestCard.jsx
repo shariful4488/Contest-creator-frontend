@@ -1,7 +1,6 @@
 import { Link } from "react-router"; 
 
 const ContestCard = ({ contest }) => {
-    // Destructuring with default values
     const { 
         _id, 
         contestName, 
@@ -15,20 +14,16 @@ const ContestCard = ({ contest }) => {
     return (
         <div className="bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-2xl transition-all duration-500 group overflow-hidden font-outfit h-full flex flex-col">
             
-            {/* Image Section */}
             <div className="relative h-60 overflow-hidden">
                 <img 
                     src={image || 'https://via.placeholder.com/400x300?text=No+Image'} 
                     alt={contestName} 
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
                 />
-                
-                {/* Prize Badge */}
                 <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-black text-secondary uppercase shadow-lg border border-white/50">
                     ${prizeMoney || '0.00'}
                 </div>
 
-                {/* Category Badge */}
                 {contestCategory && (
                     <div className="absolute top-4 left-4 bg-primary text-white px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-widest shadow-lg">
                         {contestCategory}
@@ -36,8 +31,7 @@ const ContestCard = ({ contest }) => {
                 )}
             </div>
 
-            {/* Content Section */}
-            <div className="p-6 flex flex-col flex-grow">
+            <div className="p-6 flex flex-col grow">
                 <div className="flex items-center gap-2 mb-4">
                     <span className="flex items-center gap-1.5 text-[11px] font-bold bg-primary/10 text-primary px-3 py-1.5 rounded-xl uppercase tracking-wider">
                         <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20">
@@ -51,12 +45,10 @@ const ContestCard = ({ contest }) => {
                     {contestName}
                 </h3>
                 
-                <p className="text-slate-500 text-sm mb-6 line-clamp-2 font-medium leading-relaxed flex-grow">
+                <p className="text-slate-500 text-sm mb-6 line-clamp-2 font-medium leading-relaxed grow">
                     {description}
                 </p>
 
-                {/* Action Button */}
-                {/* Fix: Link logic and padding check */}
                 <Link to={`/contest-details/${_id}`} className="mt-auto block">
                     <button className="w-full py-4 bg-secondary group-hover:bg-primary text-white font-bold rounded-2xl transition-all duration-300 shadow-md group-hover:shadow-primary/40 active:scale-95 uppercase text-[10px] tracking-widest border-none">
                         View Details

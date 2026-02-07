@@ -56,7 +56,6 @@ const AuthProvider = ({ children }) => {
             
             if (currentUser) {
                 const userInfo = { email: currentUser.email };
-                // JWT নেওয়ার জন্য axiosPublic ব্যবহার করুন
                 axiosPublic.post('/jwt', userInfo)
                     .then(res => {
                         if (res.data.token) {

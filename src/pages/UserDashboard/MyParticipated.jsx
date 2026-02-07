@@ -85,7 +85,6 @@ const MyParticipated = () => {
 
   return (
     <div className="container mx-auto px-4 py-6 md:py-10">
-      {/* Header Section */}
       <div className="mb-8 text-center sm:text-left border-l-4 border-primary pl-4">
         <h2 className="text-2xl md:text-3xl font-black text-gray-800 uppercase tracking-tight">
           My <span className="text-primary">Participations</span>
@@ -93,12 +92,10 @@ const MyParticipated = () => {
         <p className="text-gray-500 mt-1 text-sm md:text-base">Track your registrations and submit your work.</p>
       </div>
 
-      {/* Content Section */}
       {participations.length > 0 ? (
         <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
           <div className="overflow-x-auto">
             <table className="table w-full border-collapse">
-              {/* Table Head - Hidden on very small screens for better UX */}
               <thead className="bg-gray-900 text-white hidden md:table-header-group">
                 <tr>
                   <th className="py-5 pl-6 font-bold uppercase text-xs">#</th>
@@ -113,20 +110,17 @@ const MyParticipated = () => {
               <tbody className="divide-y divide-gray-100">
                 {participations.map((item, index) => (
                   <tr key={item._id} className="hover:bg-blue-50/30 transition-colors flex flex-col md:table-row py-4 md:py-0 px-6 md:px-0 relative">
-                    {/* Index - Badge style on mobile */}
                     <td className="md:table-cell md:pl-6 py-2 md:py-6">
                       <span className="md:hidden font-bold text-gray-400 mr-2">#{index + 1}</span>
                       <span className="hidden md:inline font-medium text-gray-500">{index + 1}</span>
                     </td>
 
-                    {/* Contest Name */}
                     <td className="md:table-cell py-1 md:py-6">
                       <div className="font-black text-gray-800 text-lg md:text-base leading-tight">
                         {item.contestName}
                       </div>
                     </td>
 
-                    {/* Status */}
                     <td className="md:table-cell md:text-center py-2 md:py-6">
                       <div className={`badge badge-md gap-2 border-none py-3 px-4 text-white font-bold text-[10px] uppercase tracking-wider
                         ${item.status === 'Completed' ? 'bg-indigo-500' : 'bg-green-500'}`}>
@@ -134,7 +128,6 @@ const MyParticipated = () => {
                       </div>
                     </td>
 
-                    {/* Deadline */}
                     <td className="md:table-cell py-1 md:py-6">
                       <div className="flex flex-col">
                         <span className="md:hidden text-[10px] uppercase text-gray-400 font-bold">Deadline:</span>
@@ -144,7 +137,6 @@ const MyParticipated = () => {
                       </div>
                     </td>
 
-                    {/* Transaction ID */}
                     <td className="md:table-cell py-1 md:py-6">
                        <div className="flex flex-col">
                         <span className="md:hidden text-[10px] uppercase text-gray-400 font-bold">Transaction ID:</span>
@@ -154,7 +146,6 @@ const MyParticipated = () => {
                       </div>
                     </td>
 
-                    {/* Action Button */}
                     <td className="md:table-cell py-4 md:py-6 md:text-center md:pr-6">
                       {item.submittedTask ? (
                         <button

@@ -1,8 +1,6 @@
 import React from 'react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay, EffectFade } from 'swiper/modules';
-
-// Swiper styles
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -38,7 +36,7 @@ const Banner = ({ onSearch }) => {
     ];
 
     return (
-        <div className="relative w-full h-[500px] md:h-[700px]">
+        <div className="relative w-full h-125 md:h-175">
             <Swiper
                 modules={[Navigation, Pagination, Autoplay, EffectFade]}
                 effect="fade"
@@ -69,7 +67,6 @@ const Banner = ({ onSearch }) => {
                 ))}
             </Swiper>
 
-            {/* --- Search Bar --- */}
             <div className="absolute bottom-10 left-1/2 -translate-x-1/2 z-30 w-[90%] max-w-2xl">
                 <form onSubmit={handleSubmit} className="flex bg-white p-2 rounded-full shadow-2xl">
                     <input 

@@ -66,7 +66,6 @@ const MyCreatedContests = () => {
                             <th className="py-5 pl-8">Contest Info</th>
                             <th>Category</th>
                             <th>Status</th>
-                            {/* --- Submission Header --- */}
                             <th className="text-center">Submission</th> 
                             <th className="text-center">Actions</th>
                         </tr>

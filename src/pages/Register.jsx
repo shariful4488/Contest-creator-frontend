@@ -23,24 +23,19 @@ const Register = () => {
         imageFile.append('image', data.photo[0]);
 
         try {
-            // ১. ইমেজ আপলোড
             const res = await axiosPublic.post(image_hosting_api, imageFile, {
                 headers: { 'content-type': 'multipart/form-data' }
             });
 
             if (res.data.success) {
                 const imageUrl = res.data.data.display_url;
-
-                // ২. ফায়ারবেস ইউজার তৈরি
                 await createUser(data.email, data.password);      
                 await updateUserProfile(data.name, imageUrl);
-
-                // ৩. ডাটাবেসে ইউজার ইনফো সেভ (ডিফল্ট রোল 'user')
                 const userInfo = {
                     name: data.name,
                     email: data.email,
                     image: imageUrl,
-                    role: 'user', // এখানে আর data.role দরকার নেই, সরাসরি 'user'
+                    role: 'user',
                     winCount: 0,
                     timestamp: new Date()
                 };

@@ -18,7 +18,7 @@ const MyWinnings = () => {
     const totalPrize = winnings.reduce((sum, item) => sum + parseFloat(item.contestPrize || 0), 0);
 
     if (isLoading) return (
-        <div className="flex justify-center items-center min-h-[400px]">
+        <div className="flex justify-center items-center min-h-100">
             <span className="loading loading-infinity loading-lg text-primary"></span>
         </div>
     );
@@ -58,7 +58,7 @@ const MyWinnings = () => {
                                     alt={contest.contestName} 
                                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                                 />
-                                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent"></div>
+                                <div className="absolute inset-0 bg-linear-to-t from-black/70 via-transparent to-transparent"></div>
                                 <div className="absolute bottom-4 left-6">
                                     <span className="bg-yellow-400 text-black px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest">
                                         <FaTrophy className="inline mr-1" /> Winner
@@ -83,7 +83,6 @@ const MyWinnings = () => {
                                     {contest.contestDescription}
                                 </p>
                                 
-                                {/* Bottom Info - Always stays at bottom */}
                                 <div className="mt-auto pt-6 border-t border-slate-50 flex justify-between items-center">
                                     <div className="bg-slate-50 px-4 py-2 rounded-xl">
                                         <p className="text-[9px] uppercase font-bold text-slate-400">Prize Money</p>

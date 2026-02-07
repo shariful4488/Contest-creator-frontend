@@ -70,11 +70,9 @@ const Dashboard = () => {
                 </main>
             </div> 
 
-            {/* SideBar */}
             <div className="drawer-side z-50">
                 <label htmlFor="dashboard-drawer" className="drawer-overlay"></label> 
                 <div className="w-72 min-h-full bg-secondary text-white p-6 shadow-2xl flex flex-col">
-                    {/* Sidebar Brand */}
                     <div className="mb-10 text-left px-2">
                         <h2 className="text-2xl font-black italic tracking-tighter uppercase leading-none">
                             Contest<span className="text-primary">Hub</span>

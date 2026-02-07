@@ -14,8 +14,6 @@ const SubmissionReview = () => {
             return res.data;
         }
     });
-
-    // চেক করা হচ্ছে এই কন্টেস্টের জন্য ইতিমধ্যে কোনো উইনার ঘোষণা করা হয়েছে কি না
     const winnerEntry = submissions.find(sub => sub.winnerEmail);
     const isAnyWinnerDeclared = !!winnerEntry;
 
@@ -40,7 +38,7 @@ const SubmissionReview = () => {
                     const res = await axiosSecure.patch(`/make-winner/${submission._id}`, winnerData);
                     if (res.data.success) {
                         Swal.fire("Success!", "Winner has been declared successfully.", "success");
-                        refetch(); // ডাটা রিফ্রেশ করা হচ্ছে বাটন আপডেট করার জন্য
+                        refetch(); 
                     }
                 } catch (error) {
                     Swal.fire("Error!", "Something went wrong.", "error");
@@ -50,7 +48,7 @@ const SubmissionReview = () => {
     };
 
     if (isLoading) return (
-        <div className="flex justify-center items-center min-h-[400px]">
+        <div className="flex justify-center items-center min-h-100">
             <span className="loading loading-spinner loading-lg text-primary"></span>
         </div>
     );
@@ -63,7 +61,7 @@ const SubmissionReview = () => {
                 </h2>
                 {isAnyWinnerDeclared && (
                     <div className="badge badge-success gap-2 p-4 text-white font-bold">
-                        🏆 Winner: {winnerEntry.winnerEmail}
+                         Winner: {winnerEntry.winnerEmail}
                     </div>
                 )}
             </div>
@@ -100,7 +98,7 @@ const SubmissionReview = () => {
                                         <button 
                                             onClick={() => handleMakeWinner(sub)}
                                             disabled={isAnyWinnerDeclared}
-                                            className={`btn btn-sm min-w-[120px] rounded-lg border-none text-white transition-all
+                                            className={`btn btn-sm min-w-30 rounded-lg border-none text-white transition-all
                                                 ${isThisUserWinner 
                                                     ? 'bg-yellow-500 hover:bg-yellow-600 shadow-lg shadow-yellow-100' 
                                                     : isAnyWinnerDeclared 
@@ -109,7 +107,7 @@ const SubmissionReview = () => {
                                                 }`}
                                         >
                                             {isThisUserWinner 
-                                                ? "🏆 Winner" 
+                                                ? " Winner" 
                                                 : isAnyWinnerDeclared 
                                                     ? "Closed" 
                                                     : "Make Winner"
