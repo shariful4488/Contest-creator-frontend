@@ -29,6 +29,9 @@ import SubmissionReview from "../pages/ManagerDashboard/SubmissionReview";
 import ExploreContests from "../pages/ExploreContests";
 import Leaderboard from "../pages/Leaderboard";
 import ReviewContestList from "../pages/ManagerDashboard/ReviewContestList";
+import AdminHome from "../pages/AdminDashboard/AdminHome";
+import AboutPage from "../pages/AboutPage";
+import ContactPage from "../pages/ContactPage";
 
 
 
@@ -45,6 +48,14 @@ const Router = createBrowserRouter([
                 path:"leaderboard",
                 element:<Leaderboard/>
 
+            },
+            {
+               path:"about",
+               element:<AboutPage/>
+            },
+            {
+             path:"contact",
+             element:<ContactPage/>
             },
 
             {
@@ -73,6 +84,10 @@ const Router = createBrowserRouter([
         element: <PrivateRoute><Dashboard /></PrivateRoute>,
         children: [
             // Admin  Route 
+            {
+              index:true,
+              element:<AdminRoute><AdminHome/></AdminRoute>
+            },
             { 
                 path: "manage-users", 
                 element: <AdminRoute><ManageUsers /></AdminRoute> 

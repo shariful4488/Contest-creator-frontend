@@ -12,18 +12,21 @@ const ContestCard = ({ contest }) => {
     } = contest;
 
     return (
-        <div className="bg-white rounded-3xl border border-slate-100 shadow-sm hover:shadow-2xl transition-all duration-500 group overflow-hidden font-outfit h-full flex flex-col">
+        <div className="bg-base-100 rounded-[2rem] border border-base-200 shadow-sm hover:shadow-2xl transition-all duration-500 group overflow-hidden font-outfit h-full flex flex-col">
             
-            <div className="relative h-60 overflow-hidden">
+            {/* Image Section */}
+            <div className="relative h-56 overflow-hidden">
                 <img 
                     src={image || 'https://via.placeholder.com/400x300?text=No+Image'} 
                     alt={contestName} 
                     className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" 
                 />
+                {/* Prize Tag */}
                 <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-4 py-1.5 rounded-full text-xs font-black text-secondary uppercase shadow-lg border border-white/50">
-                    ${prizeMoney || '0.00'}
+                    ${prizeMoney}
                 </div>
 
+                {/* Category Tag */}
                 {contestCategory && (
                     <div className="absolute top-4 left-4 bg-primary text-white px-3 py-1 rounded-lg text-[10px] font-bold uppercase tracking-widest shadow-lg">
                         {contestCategory}
@@ -31,6 +34,7 @@ const ContestCard = ({ contest }) => {
                 )}
             </div>
 
+            {/* Content Section */}
             <div className="p-6 flex flex-col grow">
                 <div className="flex items-center gap-2 mb-4">
                     <span className="flex items-center gap-1.5 text-[11px] font-bold bg-primary/10 text-primary px-3 py-1.5 rounded-xl uppercase tracking-wider">
@@ -41,16 +45,16 @@ const ContestCard = ({ contest }) => {
                     </span>
                 </div>
 
-                <h3 className="text-xl font-black text-secondary mb-3 line-clamp-1 group-hover:text-primary transition-colors duration-300">
+                <h3 className="text-xl font-black text-base-content mb-3 line-clamp-1 group-hover:text-primary transition-colors duration-300">
                     {contestName}
                 </h3>
                 
-                <p className="text-slate-500 text-sm mb-6 line-clamp-2 font-medium leading-relaxed grow">
+                <p className="text-base-content/60 text-sm mb-6 line-clamp-2 font-medium leading-relaxed grow">
                     {description}
                 </p>
 
                 <Link to={`/contest-details/${_id}`} className="mt-auto block">
-                    <button className="w-full py-4 bg-secondary group-hover:bg-primary text-white font-bold rounded-2xl transition-all duration-300 shadow-md group-hover:shadow-primary/40 active:scale-95 uppercase text-[10px] tracking-widest border-none">
+                    <button className="w-full py-4 bg-secondary group-hover:bg-primary text-white font-bold rounded-2xl transition-all duration-300 shadow-md group-hover:shadow-primary/40 active:scale-95 uppercase text-[10px] tracking-widest border-none cursor-pointer">
                         View Details
                     </button>
                 </Link>
