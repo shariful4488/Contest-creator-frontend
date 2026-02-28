@@ -90,8 +90,6 @@ const Navbar = () => {
                   {/* 6+ Logged In Routes below */}
                   <li><Link to="/dashboard" className="font-bold text-primary hover:bg-primary hover:text-white transition-all"><FaLayerGroup /> Dashboard Home</Link></li>
                   <li><Link to="/dashboard/my-participated" className="font-medium">My Participation</Link></li>
-                  <li><Link to="/dashboard/my-winning" className="font-medium"><FaTrophy className="text-orange-400"/> My Wins</Link></li>
-                  <li><Link to="/dashboard/my-submissions" className="font-medium"><FaBriefcase /> Submissions</Link></li>
                   <li><Link to="/dashboard/profile" className="font-medium"><FaUser /> Profile Settings</Link></li>
                   
                   <li className="mt-2 pt-2 border-t border-base-200">

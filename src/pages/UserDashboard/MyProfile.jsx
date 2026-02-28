@@ -1,83 +1,151 @@
+import { useForm } from "react-hook-form";
 import useAuth from "../../hooks/useAuth";
 import useRole from "../../hooks/useRole";
-import { FaUserShield, FaUsers, FaTasks, FaEnvelope, FaFingerprint, FaCog } from "react-icons/fa";
+import useAxiosPublic from "../../hooks/useAxios";
+import Swal from "sweetalert2";
+import axios from "axios";
+import { FaUserShield, FaUsers, FaTasks, FaEnvelope, FaFingerprint, FaCamera, FaSave, FaTrophy } from "react-icons/fa";
+import { useState } from "react";
+import { Link } from "react-router";
+
+const image_hosting_key = import.meta.env.VITE_IMGBB_API_KEY;
+const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
 
 const MyProfile = () => {
-    const { user } = useAuth();
+    const { user, updateUserProfile } = useAuth();
     const [role] = useRole();
+    const axiosPublic = useAxiosPublic();
+    const [uploading, setUploading] = useState(false);
+    const { register, handleSubmit, reset } = useForm();
 
     const isAdmin = role === 'admin';
 
+    const onSubmit = async (data) => {
+        setUploading(true);
+        try {
+            let imageUrl = user?.photoURL;
+            if (data.photo && data.photo[0]) {
+                const imageFile = new FormData();
+                imageFile.append('image', data.photo[0]);
+                const res = await axios.post(image_hosting_api, imageFile, {
+                    headers: { 'content-type': 'multipart/form-data' }
+                });
+                imageUrl = res.data.data.display_url;
+            }
+
+            await updateUserProfile(data.name || user?.displayName, imageUrl);
+
+            const updatedInfo = {
+                name: data.name || user?.displayName,
+                image: imageUrl
+            };
+            const res = await axiosPublic.patch(`/users/update/${user?.email}`, updatedInfo);
+
+            if (res.data.modifiedCount > 0 || res.data.matchedCount > 0) {
+                Swal.fire({ icon: "success", title: "Profile Updated!", showConfirmButton: false, timer: 1500 });
+                reset();
+            }
+        } catch (error) {
+            console.error(error);
+            Swal.fire({ icon: "error", title: "Update Failed" });
+        } finally {
+            setUploading(false);
+        }
+    };
+
     return (
-        <div className="animate-fade-in font-outfit">
+        <div className="animate-fade-in font-outfit pb-10">
             <div className="flex flex-col md:flex-row items-center justify-between gap-6 mb-10">
                 <div>
-                    <h2 className="text-3xl font-black text-secondary uppercase italic leading-none">
-                        {isAdmin ? "Admin" : "User"} <span className="text-primary">Profile</span>
+                    <h2 className="text-4xl font-black text-secondary uppercase italic leading-none">
+                        {isAdmin ? "Admin" : "User"} <span className="text-primary">Space.</span>
                     </h2>
-                    <p className="text-slate-400 text-sm mt-2 font-medium">
-                        {isAdmin ? "Platform Control & Personal Information" : "Your personal journey and stats"}
+                    <p className="text-slate-400 text-[10px] uppercase tracking-[0.3em] font-bold mt-2">
+                        {isAdmin ? "Platform Authority Control" : "Your Participation Journey"}
                     </p>
                 </div>
-                <button className={`btn btn-sm rounded-full px-6 shadow-lg transition-all ${isAdmin ? 'btn-secondary' : 'btn-primary text-white'}`}>
-                    <FaCog /> Settings
-                </button>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                <div className="lg:col-span-4 bg-white border border-slate-100 rounded-[2.5rem] p-8 shadow-sm text-center relative overflow-hidden">
-                    {isAdmin && <div className="absolute top-0 right-0 bg-primary text-white text-[10px] font-black px-6 py-1 rotate-45 translate-x-4 translate-y-2 uppercase">Root</div>}
+                <div className="lg:col-span-5 bg-white border border-slate-100 rounded-[3rem] p-10 shadow-2xl shadow-slate-200/50 relative overflow-hidden group">
+                    <div className={`absolute top-0 left-0 w-full h-32 ${isAdmin ? 'bg-secondary' : 'bg-primary'} opacity-10 group-hover:opacity-20 transition-opacity`}></div>
                     
-                    <div className="avatar ring-4 ring-primary ring-offset-4 rounded-full w-28 h-28 mb-6 mx-auto">
-                        <img src={user?.photoURL || "https://i.ibb.co/3S46BvD/user.png"} className="rounded-full" alt="Avatar" />
-                    </div>
-
-                    <h3 className="text-2xl font-black text-secondary uppercase italic">{user?.displayName}</h3>
-                    
-                    <div className={`mt-3 inline-flex items-center gap-2 px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest ${isAdmin ? 'bg-secondary text-white' : 'bg-primary/10 text-primary'}`}>
-                        {isAdmin ? <FaUserShield /> : <FaFingerprint />} {role} Mode
-                    </div>
-
-                    <div className="mt-8 space-y-3">
-                        <div className="flex items-center gap-3 bg-slate-50 p-3 rounded-2xl text-left border border-slate-100">
-                            <FaEnvelope className="text-primary" />
-                            <div className="overflow-hidden">
-                                <p className="text-[9px] font-black text-slate-400 uppercase tracking-tighter">Registered Email</p>
-                                <p className="text-xs font-bold text-secondary truncate">{user?.email}</p>
+                    <form onSubmit={handleSubmit(onSubmit)} className="relative">
+                        <div className="relative w-40 h-40 mx-auto mb-8">
+                            <div className="w-full h-full rounded-[2.5rem] ring-4 ring-offset-8 ring-primary/20 overflow-hidden shadow-2xl">
+                                <img src={user?.photoURL || "https://i.ibb.co/3S46BvD/user.png"} className="w-full h-full object-cover" alt="Avatar" />
                             </div>
+                            <label className="absolute -bottom-2 -right-2 btn btn-circle btn-primary btn-md shadow-xl border-4 border-white cursor-pointer hover:scale-110 transition-transform">
+                                <FaCamera className="text-white" />
+                                <input type="file" {...register("photo")} className="hidden" />
+                            </label>
                         </div>
-                    </div>
+
+                        <div className="text-center space-y-4">
+                            <input 
+                                type="text" 
+                                defaultValue={user?.displayName} 
+                                {...register("name")}
+                                className="text-2xl font-black text-secondary uppercase italic bg-transparent border-b-2 border-dashed border-slate-200 focus:border-primary outline-none text-center w-full"
+                            />
+                            
+                            <div className={`inline-flex items-center gap-2 px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em] ${isAdmin ? 'bg-secondary text-white' : 'bg-primary/10 text-primary'}`}>
+                                {isAdmin ? <FaUserShield /> : <FaFingerprint />} {role} verified
+                            </div>
+
+                            <div className="bg-slate-50 p-6 rounded-[2rem] border border-slate-100 mt-8 text-left">
+                                <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest mb-2 flex items-center gap-2">
+                                    <FaEnvelope className="text-primary" /> Official Email
+                                </p>
+                                <p className="text-sm font-bold text-secondary truncate">{user?.email}</p>
+                            </div>
+
+                            <button disabled={uploading} className="btn btn-primary w-full rounded-2xl text-white font-black uppercase italic tracking-widest mt-6 shadow-lg shadow-primary/20">
+                                {uploading ? <span className="loading loading-spinner"></span> : <><FaSave /> Save Profile</>}
+                            </button>
+                        </div>
+                    </form>
                 </div>
 
-                <div className="lg:col-span-8 space-y-6">
+                <div className="lg:col-span-7 space-y-6">
                     {isAdmin ? (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 h-full">
-                            <div className="bg-primary p-8 rounded-[2.5rem] text-white flex flex-col justify-between shadow-xl shadow-primary/20 group hover:-translate-y-1 transition-transform">
+                            <div className="bg-slate-900 p-10 rounded-[3rem] text-white flex flex-col justify-between shadow-2xl relative overflow-hidden group">
+                                <div className="absolute -right-10 -bottom-10 w-40 h-40 bg-primary opacity-20 rounded-full blur-3xl"></div>
                                 <div>
-                                    <FaUsers className="text-4xl mb-4 opacity-50 group-hover:scale-110 transition-transform" />
-                                    <p className="font-black uppercase italic text-xs tracking-widest opacity-80">Platform Management</p>
-                                    <h4 className="text-4xl font-black italic mt-2 uppercase">Manage Users</h4>
+                                    <FaUsers className="text-5xl mb-6 text-primary group-hover:animate-bounce" />
+                                    <p className="font-black uppercase text-[10px] tracking-widest text-slate-400">System Control</p>
+                                    <h4 className="text-3xl font-black italic mt-2 uppercase">Users List</h4>
                                 </div>
-                                <p className="text-sm mt-4 text-blue-100 italic">Total 124 Active users on site</p>
+                                <p className="text-xs mt-6 text-slate-400 font-bold border-l-2 border-primary pl-4">Manage and monitor all participants</p>
                             </div>
 
-                            <div className="bg-secondary p-8 rounded-[2.5rem] text-white flex flex-col justify-between shadow-xl shadow-slate-300 group hover:-translate-y-1 transition-transform">
+                            <div className="bg-white border border-slate-100 p-10 rounded-[3rem] flex flex-col justify-between shadow-xl group">
                                 <div>
-                                    <FaTasks className="text-4xl mb-4 text-primary opacity-80 group-hover:scale-110 transition-transform" />
-                                    <p className="font-black uppercase italic text-xs tracking-widest opacity-60">Approvals</p>
-                                    <h4 className="text-4xl font-black italic mt-2 uppercase">Contest Requests</h4>
+                                    <div className="w-16 h-16 bg-secondary/5 rounded-2xl flex items-center justify-center mb-6 group-hover:rotate-12 transition-transform">
+                                        <FaTasks className="text-3xl text-secondary" />
+                                    </div>
+                                    <p className="font-black uppercase text-[10px] tracking-widest text-slate-400">Audit Trail</p>
+                                    <h4 className="text-3xl font-black italic mt-2 uppercase text-secondary">Contest Info</h4>
                                 </div>
-                                <p className="text-sm mt-4 text-slate-400 italic">05 Pending approvals required</p>
+                                <button className="btn btn-ghost btn-sm p-0 justify-start hover:bg-transparent text-primary font-black uppercase text-[10px] tracking-widest mt-6">Review Pending →</button>
                             </div>
                         </div>
                     ) : (
-                        <div className="bg-white border border-slate-100 rounded-[2.5rem] p-10 h-full flex flex-col justify-center items-center text-center">
-                            <div className="bg-slate-50 w-20 h-20 rounded-full flex items-center justify-center mb-6">
-                                <FaTasks className="text-3xl text-primary" />
+                        <div className="bg-white border-2 border-dashed border-slate-200 rounded-[3rem] p-12 h-full flex flex-col justify-center items-center text-center">
+                            <div className="relative">
+                                <div className="w-24 h-24 bg-primary/5 rounded-[2rem] flex items-center justify-center mb-8 animate-pulse">
+                                    <FaTrophy className="text-4xl text-primary" />
+                                </div>
+                                <div className="absolute -top-2 -right-2 w-6 h-6 bg-secondary rounded-full"></div>
                             </div>
-                            <h4 className="text-2xl font-black text-secondary uppercase italic">Performance Snapshot</h4>
-                            <p className="text-slate-400 mt-2 max-w-sm">You haven't participated in any contests yet. Start your journey today and win prizes!</p>
-                            <button className="btn btn-primary btn-outline mt-8 rounded-full px-8 font-black uppercase italic text-xs tracking-widest">Explore Contests</button>
+                            <h4 className="text-3xl font-black text-secondary uppercase italic">No Trophies Yet!</h4>
+                            <p className="text-slate-400 mt-4 max-w-xs font-medium leading-relaxed">
+                                Your cabinet is empty. Join a contest today and start your winning streak!
+                            </p>
+                            <Link to="/all-contests" className="btn btn-secondary rounded-2xl px-10 font-black uppercase italic text-xs tracking-widest mt-10 shadow-xl">
+                                Browse All Contests
+                            </Link>
                         </div>
                     )}
                 </div>
