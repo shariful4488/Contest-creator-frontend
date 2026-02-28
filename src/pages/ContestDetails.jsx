@@ -1,16 +1,27 @@
 import { useQuery } from "@tanstack/react-query";
-import { Link, useParams } from "react-router";
-import useAxiosSecure from "../hooks/useAxiosSecure";
+import { Link, useParams, useLocation, useNavigate } from "react-router";
+import { useContext, useState } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import { AuthContext } from "../provider/AuthProvider";
+import useAxiosSecure from "../hooks/useAxiosSecure"; 
 import LoadingSpinner from "../components/LoadingSpinner";
 import CountdownTimer from "./CountdownTimer";
-import { useContext } from "react";
-import { AuthContext } from "../provider/AuthProvider";
+import { FaTrophy, FaUsers, FaInfoCircle, FaStar, FaArrowLeft } from "react-icons/fa";
+
+// Swiper styles
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
 
 const ContestDetails = () => {
     const { id } = useParams();
     const { user } = useContext(AuthContext);
     const axiosSecure = useAxiosSecure();
+    const [activeTab, setActiveTab] = useState('description');
+    const navigate = useNavigate();
 
+    // ডাটা ফেচিং (শুধুমাত্র লগইন ইউজারদের জন্য Secure API)
     const { data: contest = {}, isLoading, isError } = useQuery({
         queryKey: ['contest', id],
         queryFn: async () => {
@@ -19,140 +30,166 @@ const ContestDetails = () => {
         }
     });
 
+    // একই ক্যাটাগরির অন্যান্য কনটেস্ট
+    const { data: relatedContests = [] } = useQuery({
+        queryKey: ['related-contests', contest?.category],
+        enabled: !!contest?.category,
+        queryFn: async () => {
+            const res = await axiosSecure.get(`/all-contests?category=${contest.category}&size=4`);
+            return res.data.contests.filter(c => c._id !== id);
+        }
+    });
+
     if (isLoading) return <LoadingSpinner />;
-    
-    if (isError || !contest.contestName) {
-        return (
-            <div className="min-h-[60vh] flex flex-col items-center justify-center font-outfit">
-                <h2 className="text-2xl font-black text-secondary uppercase">Contest Not Found</h2>
-                <Link to="/" className="btn btn-primary mt-4 rounded-xl">Back to Home</Link>
-            </div>
-        );
-    }
+    if (isError) return <div className="py-20 text-center font-black uppercase text-error">Contest not found or Access Denied!</div>;
 
     const {
-        _id,
-        contestName,
-        image,
-        contestDescription,
-        price,
-        prizeMoney,
-        participationCount,
-        contestDeadline,
-        winnerName,
-        winnerImage,
-        category
+        _id, contestName, image, gallery = [], contestDescription, 
+        price, prizeMoney, participationCount, contestDeadline, 
+        winnerName, winnerImage, category
     } = contest;
 
-    // ডেডলাইন চেক লজিক
+    const allImages = [image, ...(gallery || [])].filter(Boolean);
     const isDeadlineOver = contestDeadline ? new Date() > new Date(contestDeadline) : false;
 
     return (
-        <div className="max-w-7xl mx-auto my-16 p-6 font-outfit">
-            <div className="card lg:card-side bg-white shadow-[0_20px_50px_rgba(0,0,0,0.1)] overflow-hidden border border-slate-100 rounded-[2.5rem]">
+        <div className="bg-[#FBFCFE] min-h-screen font-outfit pb-20">
+            {/* Header / Back Button */}
+            <div className="max-w-7xl mx-auto px-6 py-6">
+                <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-slate-400 hover:text-primary font-bold uppercase text-[10px] tracking-[0.2em] transition-all">
+                    <FaArrowLeft /> Back to Explore
+                </button>
+            </div>
+
+            <div className="max-w-7xl mx-auto px-4 md:px-6 grid grid-cols-1 lg:grid-cols-12 gap-10">
                 
-                {/* Image Section */}
-                <figure className="lg:w-1/2 relative group">
-                    <img 
-                        src={image || "https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1000"} 
-                        alt={contestName} 
-                        className="h-full w-full object-cover min-h-[500px] transition-transform duration-700 group-hover:scale-105" 
-                    />
-                    <div className="absolute top-6 left-6 flex flex-col gap-2">
-                         <span className="badge bg-white/90 backdrop-blur-md text-primary font-black border-none px-4 py-3 shadow-lg uppercase text-[10px] tracking-widest">
-                            {category || 'General'}
-                        </span>
+                {/* --- Left Column: Media & Content --- */}
+                <div className="lg:col-span-8 space-y-8">
+                    {/* Image Slider */}
+                    <div className="bg-white p-4 rounded-[2.5rem] shadow-xl border border-slate-100">
+                        <Swiper
+                            modules={[Navigation, Pagination, Autoplay]}
+                            navigation
+                            pagination={{ clickable: true }}
+                            autoplay={{ delay: 4000 }}
+                            className="rounded-[2rem] overflow-hidden aspect-video shadow-inner"
+                        >
+                            {allImages.map((img, index) => (
+                                <SwiperSlide key={index}>
+                                    <img src={img} className="w-full h-full object-cover" alt="Contest" />
+                                </SwiperSlide>
+                            ))}
+                        </Swiper>
                     </div>
 
-                    {isDeadlineOver && !winnerName && (
-                        <div className="absolute inset-0 bg-secondary/80 backdrop-blur-sm flex items-center justify-center z-10">
-                            <div className="text-center">
-                                <span className="text-white text-4xl font-black uppercase tracking-[0.3em] border-y-4 py-4 border-white inline-block">
-                                    Registration Ended
-                                </span>
+                    {/* Tabs Navigation */}
+                    <div className="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
+                        <div className="flex border-b border-slate-100">
+                            {['description', 'specifications', 'reviews'].map(tab => (
+                                <button 
+                                    key={tab}
+                                    onClick={() => setActiveTab(tab)}
+                                    className={`flex-1 py-5 text-[10px] font-black uppercase tracking-widest transition-all ${activeTab === tab ? 'bg-primary text-white' : 'text-slate-400 hover:bg-slate-50'}`}
+                                >
+                                    {tab}
+                                </button>
+                            ))}
+                        </div>
+                        
+                        <div className="p-8 md:p-10">
+                            {activeTab === 'description' && (
+                                <div className="space-y-6 animate-fadeIn">
+                                    <h3 className="text-2xl font-black text-secondary uppercase italic leading-none">Contest Overview</h3>
+                                    <p className="text-slate-500 leading-relaxed text-lg">{contestDescription}</p>
+                                </div>
+                            )}
+
+                            {activeTab === 'specifications' && (
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fadeIn">
+                                    <InfoCard label="Category" value={category} />
+                                    <InfoCard label="Participation" value={`${participationCount || 0} People`} />
+                                    <InfoCard label="Difficulty" value="Intermediate" />
+                                    <InfoCard label="Platform" value="ContestHub Official" />
+                                </div>
+                            )}
+
+                            {activeTab === 'reviews' && (
+                                <div className="text-center py-10 opacity-40 animate-fadeIn">
+                                    <FaStar className="text-5xl mx-auto mb-4 text-orange-300" />
+                                    <p className="font-black uppercase tracking-widest text-xs">No reviews yet for this contest</p>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </div>
+
+                {/* --- Right Column: Sidebar Actions --- */}
+                <div className="lg:col-span-4 space-y-8">
+                    <div className="bg-white p-8 rounded-[2.5rem] shadow-2xl border border-primary/10 sticky top-10">
+                        <div className="mb-6">
+                            <span className="text-[10px] font-black text-primary uppercase tracking-[0.3em]">Total Prize Pool</span>
+                            <h2 className="text-5xl font-black text-secondary mt-1">${prizeMoney}</h2>
+                        </div>
+
+                        <div className="space-y-4 mb-8">
+                            <div className="flex justify-between items-center p-4 bg-slate-50 rounded-2xl">
+                                <span className="text-[10px] font-black text-slate-400 uppercase">Entry Fee</span>
+                                <span className="text-xl font-black text-primary">${price}</span>
                             </div>
                         </div>
-                    )}
-                </figure>
-                
-                {/* Content Section */}
-                <div className="card-body lg:w-1/2 p-10 lg:p-14 bg-white">
-                    <div className="flex justify-between items-center mb-6">
-                        <div className="flex items-center gap-2">
-                             <div className="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
-                             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Featured Contest</p>
-                        </div>
-                        <div className="bg-slate-50 px-4 py-2 rounded-2xl border border-slate-100">
-                            <p className="text-[10px] text-slate-400 uppercase font-black tracking-widest text-center">Enrolled</p>
-                            <p className="text-xl font-black text-secondary text-center leading-none mt-1">{participationCount || 0}</p>
-                        </div>
-                    </div>
 
-                    <h2 className="text-4xl lg:text-5xl font-black text-secondary leading-tight mb-4 italic uppercase">
-                        {contestName}
-                    </h2>
-                    
-                    {/* Countdown Section */}
-                    <div className="mb-8 bg-indigo-50/50 p-6 rounded-3xl border border-primary/10">
-                        <p className="text-[10px] font-black text-primary uppercase mb-3 tracking-[0.2em]">Registration Deadline In:</p>
-                        {contestDeadline ? (
+                        {/* Deadline Timer */}
+                        <div className="mb-8 p-6 bg-secondary rounded-[2rem] text-white">
+                            <p className="text-[9px] font-black uppercase tracking-widest opacity-60 mb-3 text-center">Registration Closing In</p>
                             <CountdownTimer deadline={contestDeadline} />
-                        ) : (
-                            <span className="text-red-500 font-bold">No Fixed Deadline</span>
-                        )}
-                    </div>
-
-                    <p className="text-slate-500 font-medium leading-relaxed mb-8 text-lg">
-                        {contestDescription}
-                    </p>
-                    
-                    {/* Price & Prize Section */}
-                    <div className="grid grid-cols-2 gap-4 mb-10">
-                        <div className="bg-slate-50 p-6 rounded-[2rem] border border-slate-100 group hover:border-primary/30 transition-all">
-                            <p className="text-[10px] text-slate-400 uppercase font-black mb-1 tracking-widest">Registration Fee</p>
-                            <p className="text-3xl font-black text-primary">${price}</p>
                         </div>
-                        <div className="bg-emerald-50 p-6 rounded-[2rem] border border-emerald-100 group hover:border-emerald-300 transition-all">
-                            <p className="text-[10px] text-emerald-600/60 uppercase font-black mb-1 tracking-widest">Grand Prize Money</p>
-                            <p className="text-3xl font-black text-emerald-500">${prizeMoney}</p>
-                        </div>
-                    </div>
 
-                    {/* Action Section */}
-                    <div className="card-actions mt-auto">
+                        {/* Action Button */}
                         {winnerName ? (
-                            <div className="w-full p-6 bg-secondary text-white rounded-[2rem] flex items-center gap-5 shadow-2xl relative overflow-hidden group">
-                                <div className="absolute right-0 top-0 opacity-10 text-8xl font-black -rotate-12 translate-x-4 -translate-y-4">🏆</div>
-                                <div className="avatar ring-4 ring-primary ring-offset-2 ring-offset-secondary rounded-full relative z-10">
-                                    <div className="w-16 rounded-full">
-                                        <img src={winnerImage || "https://i.ibb.co/mR79YyZ/user.png"} alt="winner" />
-                                    </div>
+                             <div className="flex items-center gap-4 p-4 bg-emerald-50 border border-emerald-100 rounded-2xl">
+                                <img src={winnerImage} className="w-12 h-12 rounded-full border-2 border-emerald-500" alt="" />
+                                <div>
+                                    <p className="text-[8px] font-black text-emerald-600 uppercase">Winner Announced</p>
+                                    <p className="font-black text-secondary">{winnerName}</p>
                                 </div>
-                                <div className="relative z-10">
-                                    <p className="text-[10px] font-black text-primary uppercase tracking-[0.3em] italic mb-1">Our Champion</p>
-                                    <p className="text-2xl font-black">{winnerName}</p>
-                                </div>
-                            </div>
-                        ) : isDeadlineOver ? (
-                            <button disabled className="btn btn-disabled btn-block rounded-2xl h-20 text-sm font-black uppercase tracking-widest">
-                                Registration Closed
-                            </button>
+                             </div>
                         ) : (
-                            <Link 
-                                to={user ? `/payment/${_id}` : "/auth/login"} 
-                                state={{ price: price, name: contestName, from: `/contest/${_id}` }} 
-                                className="w-full"
-                            >
-                                <button className="btn btn-primary btn-block rounded-2xl text-white font-black text-sm uppercase tracking-[0.2em] h-20 shadow-2xl shadow-primary/40 hover:scale-[1.02] active:scale-95 transition-all">
-                                    Confirm Enrollment
+                            <Link to={`/payment/${_id}`} state={{ price, name: contestName }} className="w-full block">
+                                <button 
+                                    disabled={isDeadlineOver}
+                                    className="btn btn-primary btn-block h-20 rounded-[1.5rem] text-white font-black uppercase tracking-widest shadow-lg shadow-primary/30 disabled:bg-slate-200"
+                                >
+                                    {isDeadlineOver ? "Entry Closed" : "Enroll Now"}
                                 </button>
                             </Link>
                         )}
+                    </div>
+
+                    {/* Related Items */}
+                    <div className="space-y-4">
+                        <h4 className="text-sm font-black text-secondary uppercase italic ml-2">You might also like</h4>
+                        {relatedContests.map(item => (
+                            <Link to={`/contest/${item._id}`} key={item._id} className="flex items-center gap-4 p-3 bg-white rounded-2xl border border-slate-100 hover:border-primary/30 transition-all group">
+                                <img src={item.image} className="w-16 h-16 rounded-xl object-cover" alt="" />
+                                <div className="flex-1">
+                                    <p className="font-bold text-secondary text-xs truncate uppercase">{item.contestName}</p>
+                                    <p className="text-[10px] font-black text-primary">${item.price}</p>
+                                </div>
+                            </Link>
+                        ))}
                     </div>
                 </div>
             </div>
         </div>
     );
 };
+
+// Helper Component for Specifications
+const InfoCard = ({ label, value }) => (
+    <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100 flex flex-col gap-1">
+        <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">{label}</span>
+        <span className="font-black text-secondary text-sm">{value}</span>
+    </div>
+);
 
 export default ContestDetails;
