@@ -36,14 +36,21 @@ const Login = () => {
     const onSubmit = (data) => {
         setLoading(true);
         signIn(data.email, data.password)
-            .then(() => {
-                Swal.fire({
-                    icon: "success",
-                    title: "Welcome Back!",
-                    showConfirmButton: false,
-                    timer: 1500,
-                });
-                navigate(from, { replace: true });
+            .then(result => {
+                const userInfo = { email: result.user?.email };
+                axiosPublic.post('/jwt', userInfo)
+                    .then(res => {
+                        if (res.data.token) {
+                            localStorage.setItem('access-token', res.data.token);
+                            Swal.fire({
+                                icon: "success",
+                                title: "Welcome Back!",
+                                showConfirmButton: false,
+                                timer: 1500,
+                            });
+                            navigate(from, { replace: true });
+                        }
+                    })
             })
             .catch((error) => {
                 Swal.fire({
@@ -67,8 +74,14 @@ const Login = () => {
                     timestamp: new Date()
                 };
                 await axiosPublic.post('/users', userInfo);
-                Swal.fire({ icon: "success", title: "Success!", timer: 1500 });
-                navigate(from, { replace: true });
+                
+                const authInfo = { email: result.user?.email };
+                const res = await axiosPublic.post('/jwt', authInfo);
+                if (res.data.token) {
+                    localStorage.setItem('access-token', res.data.token);
+                    Swal.fire({ icon: "success", title: "Success!", timer: 1500 });
+                    navigate(from, { replace: true });
+                }
             })
             .catch(error => console.log(error));
     };
@@ -129,7 +142,7 @@ const Login = () => {
                 <div className="divider my-8 text-slate-300 text-[10px] font-black uppercase tracking-[0.3em]">OR</div>
 
                 <button onClick={handleGoogleSignIn} className="btn btn-outline w-full rounded-2xl border-slate-200 hover:bg-slate-50 hover:text-secondary gap-3 font-bold text-xs uppercase tracking-widest">
-                    <FcGoogle className="text-xl" /> Google
+                    <button><FcGoogle className="text-xl" /></button> Google
                 </button>
 
                 <p className="text-center mt-8 text-slate-400 font-bold text-[11px] uppercase tracking-widest leading-relaxed">

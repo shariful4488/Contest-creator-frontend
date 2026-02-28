@@ -23,7 +23,6 @@ const Register = () => {
     const onSubmit = async (data) => {
         setLoading(true);
         try {
-            // ১. ImgBB-তে ইমেজ আপলোড (সরাসরি axios দিয়ে)
             const imageFile = new FormData();
             imageFile.append('image', data.photo[0]);
 
@@ -33,14 +32,9 @@ const Register = () => {
 
             if (res.data.success) {
                 const imageUrl = res.data.data.display_url;
-
-                // ২. Firebase ইউজার তৈরি
                 await createUser(data.email, data.password);
-                
-                // ৩. Firebase প্রোফাইল আপডেট
                 await updateUserProfile(data.name, imageUrl);
                 
-                // ৪. MongoDB-তে ডাটা পাঠানো
                 const userInfo = {
                     name: data.name,
                     email: data.email.toLowerCase(), 
@@ -49,7 +43,11 @@ const Register = () => {
 
                 const dbResponse = await axiosPublic.post('/users', userInfo);
                 
-                if (dbResponse.data.insertedId || dbResponse.data.message === "User already exists") {
+                const authInfo = { email: data.email.toLowerCase() };
+                const tokenRes = await axiosPublic.post('/jwt', authInfo);
+                
+                if (tokenRes.data.token) {
+                    localStorage.setItem('access-token', tokenRes.data.token);
                     reset();
                     Swal.fire({
                         icon: "success",
@@ -61,11 +59,10 @@ const Register = () => {
                 }
             }
         } catch (error) {
-            console.error("Full Error Info:", error);
             Swal.fire({
                 icon: "error",
                 title: "Error!",
-                text: error.message || "Registration failed. Use a VPN if ImgBB fails.",
+                text: error.message || "Registration failed.",
             });
         } finally {
             setLoading(false);
@@ -82,8 +79,14 @@ const Register = () => {
             };
 
             await axiosPublic.post('/users', userInfo);
-            Swal.fire({ icon: "success", title: "Login Successful!", timer: 1500 });
-            navigate("/");
+            
+            const authInfo = { email: result.user?.email };
+            const res = await axiosPublic.post('/jwt', authInfo);
+            if (res.data.token) {
+                localStorage.setItem('access-token', res.data.token);
+                Swal.fire({ icon: "success", title: "Login Successful!", timer: 1500 });
+                navigate("/");
+            }
         } catch (error) {
             console.error(error);
         }
