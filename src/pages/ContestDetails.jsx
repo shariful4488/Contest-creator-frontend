@@ -20,8 +20,6 @@ const ContestDetails = () => {
     const axiosSecure = useAxiosSecure();
     const [activeTab, setActiveTab] = useState('description');
     const navigate = useNavigate();
-
-    // ডাটা ফেচিং (শুধুমাত্র লগইন ইউজারদের জন্য Secure API)
     const { data: contest = {}, isLoading, isError } = useQuery({
         queryKey: ['contest', id],
         queryFn: async () => {
@@ -30,7 +28,6 @@ const ContestDetails = () => {
         }
     });
 
-    // একই ক্যাটাগরির অন্যান্য কনটেস্ট
     const { data: relatedContests = [] } = useQuery({
         queryKey: ['related-contests', contest?.category],
         enabled: !!contest?.category,
@@ -54,7 +51,6 @@ const ContestDetails = () => {
 
     return (
         <div className="bg-[#FBFCFE] min-h-screen font-outfit pb-20">
-            {/* Header / Back Button */}
             <div className="max-w-7xl mx-auto px-6 py-6">
                 <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-slate-400 hover:text-primary font-bold uppercase text-[10px] tracking-[0.2em] transition-all">
                     <FaArrowLeft /> Back to Explore
@@ -62,10 +58,7 @@ const ContestDetails = () => {
             </div>
 
             <div className="max-w-7xl mx-auto px-4 md:px-6 grid grid-cols-1 lg:grid-cols-12 gap-10">
-                
-                {/* --- Left Column: Media & Content --- */}
                 <div className="lg:col-span-8 space-y-8">
-                    {/* Image Slider */}
                     <div className="bg-white p-4 rounded-[2.5rem] shadow-xl border border-slate-100">
                         <Swiper
                             modules={[Navigation, Pagination, Autoplay]}
@@ -82,7 +75,6 @@ const ContestDetails = () => {
                         </Swiper>
                     </div>
 
-                    {/* Tabs Navigation */}
                     <div className="bg-white rounded-[2rem] shadow-sm border border-slate-100 overflow-hidden">
                         <div className="flex border-b border-slate-100">
                             {['description', 'specifications', 'reviews'].map(tab => (
@@ -123,7 +115,6 @@ const ContestDetails = () => {
                     </div>
                 </div>
 
-                {/* --- Right Column: Sidebar Actions --- */}
                 <div className="lg:col-span-4 space-y-8">
                     <div className="bg-white p-8 rounded-[2.5rem] shadow-2xl border border-primary/10 sticky top-10">
                         <div className="mb-6">
@@ -138,13 +129,10 @@ const ContestDetails = () => {
                             </div>
                         </div>
 
-                        {/* Deadline Timer */}
                         <div className="mb-8 p-6 bg-secondary rounded-[2rem] text-white">
                             <p className="text-[9px] font-black uppercase tracking-widest opacity-60 mb-3 text-center">Registration Closing In</p>
                             <CountdownTimer deadline={contestDeadline} />
                         </div>
-
-                        {/* Action Button */}
                         {winnerName ? (
                              <div className="flex items-center gap-4 p-4 bg-emerald-50 border border-emerald-100 rounded-2xl">
                                 <img src={winnerImage} className="w-12 h-12 rounded-full border-2 border-emerald-500" alt="" />
@@ -165,7 +153,6 @@ const ContestDetails = () => {
                         )}
                     </div>
 
-                    {/* Related Items */}
                     <div className="space-y-4">
                         <h4 className="text-sm font-black text-secondary uppercase italic ml-2">You might also like</h4>
                         {relatedContests.map(item => (
@@ -184,7 +171,6 @@ const ContestDetails = () => {
     );
 };
 
-// Helper Component for Specifications
 const InfoCard = ({ label, value }) => (
     <div className="p-5 bg-slate-50 rounded-2xl border border-slate-100 flex flex-col gap-1">
         <span className="text-[9px] font-black text-slate-400 uppercase tracking-widest">{label}</span>

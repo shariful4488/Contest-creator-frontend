@@ -6,7 +6,7 @@ import { FcGoogle } from "react-icons/fc";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 import { AuthContext } from "../provider/AuthProvider";
 import useAxiosPublic from "../hooks/useAxios";
-import axios from "axios"; // External API (ImgBB) এর জন্য
+import axios from "axios"; 
 
 const image_hosting_key = import.meta.env.VITE_IMGBB_API_KEY;
 const image_hosting_api = `https://api.imgbb.com/1/upload?key=${image_hosting_key}`;
